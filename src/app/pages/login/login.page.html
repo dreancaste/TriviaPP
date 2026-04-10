@@ -1,0 +1,39 @@
+<ion-content class="login-content">
+  <div class="overlay">
+    <ion-card class="login-card">
+      <ion-card-header>
+        <ion-card-title>Star Wars Trivia</ion-card-title>
+      </ion-card-header>
+
+      <ion-card-content>
+        <ion-item>
+          <ion-input
+            label="Email"
+            labelPlacement="stacked"
+            type="email"
+            [(ngModel)]="email">
+          </ion-input>
+        </ion-item>
+
+        <ion-item>
+          <ion-input
+            label="Contraseña"
+            labelPlacement="stacked"
+            type="password"
+            [(ngModel)]="password">
+          </ion-input>
+        </ion-item>
+
+        <p class="error-text" *ngIf="errorMessage">{{ errorMessage }}</p>
+
+        <ion-button expand="block" class="main-btn" (click)="login()" [disabled]="loading">
+          {{ loading ? 'Ingresando...' : 'Iniciar sesión' }}
+        </ion-button>
+
+        <ion-button expand="block" fill="outline" (click)="goToRegister()">
+          Registrarse
+        </ion-button>
+      </ion-card-content>
+    </ion-card>
+  </div>
+</ion-content>

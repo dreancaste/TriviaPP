@@ -1,0 +1,7 @@
+{
+  "name": "starwars-trivia-final",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "angular"
+}

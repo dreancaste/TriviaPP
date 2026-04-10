@@ -1,0 +1,17 @@
+<ion-content class="home-content">
+  <div class="overlay">
+    <ion-card class="menu-card">
+      <ion-card-header>
+        <ion-card-title>Star Wars Trivia</ion-card-title>
+      </ion-card-header>
+
+      <ion-card-content>
+        <ion-button expand="block" class="menu-btn yellow" (click)="goToTrivia()">Jugar</ion-button>
+        <ion-button expand="block" class="menu-btn blue" (click)="goToProfile()">Mi perfil</ion-button>
+        <ion-button expand="block" class="menu-btn purple" (click)="goToRanking()">Ranking</ion-button>
+        <ion-button expand="block" class="menu-btn green" (click)="goToHistory()">Historial</ion-button>
+        <ion-button expand="block" color="danger" (click)="logout()">Cerrar sesión</ion-button>
+      </ion-card-content>
+    </ion-card>
+  </div>
+</ion-content>

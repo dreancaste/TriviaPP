@@ -1,0 +1,28 @@
+.history-content {
+  --background: linear-gradient(180deg, #111827 0%, #0f172a 100%);
+}
+
+.page-wrapper {
+  padding: 16px;
+}
+
+.history-card {
+  max-width: 520px;
+  margin: 20px auto;
+  background: rgba(17, 24, 39, 0.96);
+  color: white;
+  border: 2px solid #22c55e;
+  border-radius: 18px;
+}
+
+ion-card-title {
+  color: #22c55e;
+  text-align: center;
+}
+
+.history-item {
+  margin-bottom: 12px;
+  padding: 12px;
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.06);
+}

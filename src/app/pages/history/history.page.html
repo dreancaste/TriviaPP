@@ -1,0 +1,25 @@
+<ion-content class="history-content">
+  <div class="page-wrapper">
+    <ion-card class="history-card">
+      <ion-card-header>
+        <ion-card-title>Historial</ion-card-title>
+      </ion-card-header>
+
+      <ion-card-content>
+        <div *ngIf="history.length === 0">
+          Todavía no jugaste ninguna partida.
+        </div>
+
+        <div class="history-item" *ngFor="let item of history">
+          <p><strong>Fecha:</strong> {{ item.date }}</p>
+          <p><strong>Puntaje:</strong> {{ item.score }}</p>
+          <p><strong>Aciertos:</strong> {{ item.correctAnswers }} / {{ item.totalQuestions }}</p>
+        </div>
+
+        <ion-button expand="block" fill="outline" (click)="goBack()">
+          Volver
+        </ion-button>
+      </ion-card-content>
+    </ion-card>
+  </div>
+</ion-content>

@@ -1,0 +1,25 @@
+<ion-content class="ranking-content">
+  <div class="page-wrapper">
+    <ion-card class="ranking-card">
+      <ion-card-header>
+        <ion-card-title>Ranking Galáctico</ion-card-title>
+      </ion-card-header>
+
+      <ion-card-content>
+        <div *ngIf="ranking.length === 0">
+          Todavía no hay puntajes guardados.
+        </div>
+
+        <div class="ranking-item" *ngFor="let item of ranking; let i = index">
+          <span>#{{ i + 1 }}</span>
+          <span>{{ item.name }}</span>
+          <strong>{{ item.score }}</strong>
+        </div>
+
+        <ion-button expand="block" fill="outline" (click)="goBack()">
+          Volver
+        </ion-button>
+      </ion-card-content>
+    </ion-card>
+  </div>
+</ion-content>
