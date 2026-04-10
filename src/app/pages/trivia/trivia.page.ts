@@ -13,7 +13,7 @@ export class TriviaPage implements OnInit {
   currentQuestion!: TriviaQuestion;
   score = 0;
   questionNumber = 1;
-  totalQuestions = 5;
+  totalQuestions = 15;
   correctCount = 0;
   answered = false;
   selectedAnswer = '';
@@ -28,8 +28,9 @@ export class TriviaPage implements OnInit {
   ) {}
 
   async ngOnInit() {
-    await this.loadQuestion();
-  }
+  this.triviaService.resetUsedQuestions();
+  await this.loadQuestion();
+}
 
   async loadQuestion() {
     this.loading = true;
@@ -96,12 +97,13 @@ export class TriviaPage implements OnInit {
   }
 
   async playAgain() {
-    this.score = 0;
-    this.questionNumber = 1;
-    this.correctCount = 0;
-    this.gameFinished = false;
-    await this.loadQuestion();
-  }
+  this.score = 0;
+  this.questionNumber = 1;
+  this.correctCount = 0;
+  this.gameFinished = false;
+  this.triviaService.resetUsedQuestions();
+  await this.loadQuestion();
+}
 
   get progressValue(): number {
     return this.questionNumber / this.totalQuestions;
