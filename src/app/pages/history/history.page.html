@@ -1,22 +1,36 @@
-<ion-content class="history-content">
+<ion-content class="history-content" [fullscreen]="true">
   <div class="page-wrapper">
     <ion-card class="history-card">
       <ion-card-header>
-        <ion-card-title>Historial</ion-card-title>
+        <ion-card-title>Historial Galáctico</ion-card-title>
+        <ion-card-subtitle>Registro de partidas</ion-card-subtitle>
       </ion-card-header>
 
       <ion-card-content>
-        <div *ngIf="history.length === 0">
+        <div class="empty-history" *ngIf="history.length === 0">
           Todavía no jugaste ninguna partida.
+          <span>Tu archivo galáctico está vacío</span>
         </div>
 
-        <div class="history-item" *ngFor="let item of history">
-          <p><strong>Fecha:</strong> {{ item.date }}</p>
-          <p><strong>Puntaje:</strong> {{ item.score }}</p>
-          <p><strong>Aciertos:</strong> {{ item.correctAnswers }} / {{ item.totalQuestions }}</p>
+        <div class="history-list" *ngIf="history.length > 0">
+          <div class="history-item" *ngFor="let item of history">
+            <div class="history-title">
+              Partida registrada
+            </div>
+
+            <div class="history-text">
+              Resultado guardado en el sistema.
+            </div>
+
+            <div class="history-meta">
+              <span>Fecha: {{ item.date }}</span>
+              <span>Puntaje: {{ item.score }}</span>
+              <span>Aciertos: {{ item.correctAnswers }} / {{ item.totalQuestions }}</span>
+            </div>
+          </div>
         </div>
 
-        <ion-button expand="block" fill="outline" (click)="goBack()">
+        <ion-button expand="block" fill="outline" class="back-btn" (click)="goBack()">
           Volver
         </ion-button>
       </ion-card-content>

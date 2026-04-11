@@ -1,38 +1,61 @@
-<ion-content class="login-content">
+<ion-content class="login-content" [fullscreen]="true">
   <div class="overlay">
     <ion-card class="login-card">
       <ion-card-header>
         <ion-card-title>Star Wars Trivia</ion-card-title>
+        <ion-card-subtitle>Acceso al sistema galáctico</ion-card-subtitle>
       </ion-card-header>
 
       <ion-card-content>
-        <ion-item>
-          <ion-input
-            label="Email"
-            labelPlacement="stacked"
-            type="email"
-            [(ngModel)]="email">
-          </ion-input>
-        </ion-item>
+        <div class="form-fields">
+          <ion-item lines="none">
+            <ion-input
+              label="Email"
+              labelPlacement="stacked"
+              type="email"
+              inputmode="email"
+              autocomplete="email"
+              placeholder="Ingresá tu email"
+              [(ngModel)]="email">
+            </ion-input>
+          </ion-item>
 
-        <ion-item>
-          <ion-input
-            label="Contraseña"
-            labelPlacement="stacked"
-            type="password"
-            [(ngModel)]="password">
-          </ion-input>
-        </ion-item>
+          <ion-item lines="none">
+            <ion-input
+              label="Contraseña"
+              labelPlacement="stacked"
+              type="password"
+              autocomplete="current-password"
+              placeholder="Ingresá tu contraseña"
+              [(ngModel)]="password">
+            </ion-input>
+          </ion-item>
+        </div>
 
-        <p class="error-text" *ngIf="errorMessage">{{ errorMessage }}</p>
+        <p class="error-text" *ngIf="errorMessage">
+          {{ errorMessage }}
+        </p>
 
-        <ion-button expand="block" class="main-btn" (click)="login()" [disabled]="loading">
+        <ion-button
+          expand="block"
+          class="main-btn"
+          (click)="login()"
+          [disabled]="loading">
           {{ loading ? 'Ingresando...' : 'Iniciar sesión' }}
         </ion-button>
 
-        <ion-button expand="block" fill="outline" (click)="goToRegister()">
+        <ion-button
+          expand="block"
+          fill="outline"
+          class="secondary-btn"
+          (click)="goToRegister()"
+          [disabled]="loading">
           Registrarse
         </ion-button>
+
+        <div class="extra-text">
+          Que la <span>Fuerza</span> te acompañe
+        </div>
       </ion-card-content>
     </ion-card>
   </div>

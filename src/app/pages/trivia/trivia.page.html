@@ -1,61 +1,111 @@
-<ion-content class="trivia-content">
+<ion-content class="trivia-content" [fullscreen]="true">
   <div class="page-wrapper">
     <ion-card class="trivia-card" *ngIf="!gameFinished">
       <ion-card-header>
-        <ion-card-title>Trivia Star Wars</ion-card-title>
+        <ion-card-title>Trivia Galáctica</ion-card-title>
+        <ion-card-subtitle>Misión en una galaxia muy lejana</ion-card-subtitle>
       </ion-card-header>
 
       <ion-card-content *ngIf="!loading">
-        <p><strong>Pregunta {{ questionNumber }} de {{ totalQuestions }}</strong></p>
-        <ion-progress-bar [value]="progressValue"></ion-progress-bar>
-
-        <div class="category">
-          Categoría: {{ currentQuestion.category }}
+        <div class="progress-text">
+          Pregunta {{ questionNumber }} de {{ totalQuestions }}
         </div>
 
-        <h2 class="question">{{ currentQuestion.question }}</h2>
+        <div class="trivia-progress">
+          <div class="bar" [style.width.%]="progressValue * 100"></div>
+        </div>
+
+        <div class="category">
+          {{ currentQuestion.category }}
+        </div>
+
+        <h2 class="question">
+          {{ currentQuestion.question }}
+        </h2>
+
+        <div class="options-list">
+          <ion-button
+            expand="block"
+            class="option-btn"
+            *ngFor="let option of currentQuestion.options"
+            [disabled]="answered"
+            [ngClass]="{
+              'correct': answered && option === currentQuestion.correctAnswer,
+              'wrong': answered && option === selectedAnswer && option !== currentQuestion.correctAnswer,
+              'selected': !answered && option === selectedAnswer
+            }"
+            (click)="answer(option)">
+            {{ option }}
+          </ion-button>
+        </div>
+
+        <div
+          class="feedback"
+          *ngIf="feedback"
+          [ngClass]="{
+            'correct': selectedAnswer === currentQuestion.correctAnswer,
+            'wrong': selectedAnswer !== currentQuestion.correctAnswer
+          }"
+        >
+          {{ feedback }}
+        </div>
+
+        <div class="score">
+          Puntaje actual: {{ score }}
+        </div>
 
         <ion-button
           expand="block"
-          class="option-btn"
-          *ngFor="let option of currentQuestion.options"
-          [color]="answered && option === currentQuestion.correctAnswer ? 'success' : (answered && option === selectedAnswer ? 'danger' : 'medium')"
-          (click)="answer(option)">
-          {{ option }}
-        </ion-button>
-
-        <p class="feedback" *ngIf="feedback">{{ feedback }}</p>
-
-        <p class="score">Puntaje: {{ score }}</p>
-
-        <ion-button expand="block" class="next-btn" *ngIf="answered" (click)="nextQuestion()">
+          class="next-btn"
+          *ngIf="answered"
+          (click)="nextQuestion()">
           {{ questionNumber === totalQuestions ? 'Finalizar' : 'Siguiente' }}
         </ion-button>
 
-        <ion-button expand="block" fill="outline" (click)="goHome()">
+        <ion-button
+          expand="block"
+          fill="outline"
+          class="back-btn"
+          (click)="goHome()">
           Volver
         </ion-button>
       </ion-card-content>
 
       <ion-card-content *ngIf="loading">
-        <p>Cargando pregunta...</p>
+        <div class="loading-state">
+          Cargando pregunta...
+        </div>
       </ion-card-content>
     </ion-card>
 
     <ion-card class="trivia-card" *ngIf="gameFinished">
       <ion-card-header>
         <ion-card-title>Partida terminada</ion-card-title>
+        <ion-card-subtitle>Resultado de la misión</ion-card-subtitle>
       </ion-card-header>
 
       <ion-card-content>
-        <p><strong>Puntaje final:</strong> {{ score }}</p>
-        <p><strong>Aciertos:</strong> {{ correctCount }} / {{ totalQuestions }}</p>
+        <div class="final-stats">
+          <div class="stat-row">
+            <span class="stat-label">Puntaje final</span>
+            <span class="stat-value">{{ score }}</span>
+          </div>
+
+          <div class="stat-row">
+            <span class="stat-label">Aciertos</span>
+            <span class="stat-value">{{ correctCount }} / {{ totalQuestions }}</span>
+          </div>
+        </div>
 
         <ion-button expand="block" class="next-btn" (click)="playAgain()">
           Jugar otra vez
         </ion-button>
 
-        <ion-button expand="block" fill="outline" (click)="goHome()">
+        <ion-button
+          expand="block"
+          fill="outline"
+          class="back-btn"
+          (click)="goHome()">
           Volver al menú
         </ion-button>
       </ion-card-content>

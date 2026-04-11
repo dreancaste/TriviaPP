@@ -1,16 +1,39 @@
-<ion-content class="home-content">
+<ion-content class="home-content" [fullscreen]="true">
   <div class="overlay">
     <ion-card class="menu-card">
       <ion-card-header>
         <ion-card-title>Star Wars Trivia</ion-card-title>
+        <ion-card-subtitle>Centro de mando galáctico</ion-card-subtitle>
       </ion-card-header>
 
       <ion-card-content>
-        <ion-button expand="block" class="menu-btn yellow" (click)="goToTrivia()">Jugar</ion-button>
-        <ion-button expand="block" class="menu-btn blue" (click)="goToProfile()">Mi perfil</ion-button>
-        <ion-button expand="block" class="menu-btn purple" (click)="goToRanking()">Ranking</ion-button>
-        <ion-button expand="block" class="menu-btn green" (click)="goToHistory()">Historial</ion-button>
-        <ion-button expand="block" color="danger" (click)="logout()">Cerrar sesión</ion-button>
+        <div class="menu-buttons">
+          <ion-button expand="block" class="menu-btn yellow" (click)="goToTrivia()">
+            Jugar
+          </ion-button>
+
+          <ion-button expand="block" class="menu-btn blue" (click)="goToProfile()">
+            Mi perfil
+          </ion-button>
+
+          <ion-button expand="block" class="menu-btn purple" (click)="goToRanking()">
+            Ranking
+          </ion-button>
+
+          <ion-button expand="block" class="menu-btn green" (click)="goToHistory()">
+            Historial
+          </ion-button>
+        </div>
+
+        <div class="menu-divider"></div>
+
+        <ion-button expand="block" class="menu-btn logout-btn" (click)="logout()">
+          Cerrar sesión
+        </ion-button>
+
+        <div class="home-quote">
+          Que la <span>Fuerza</span> guíe tu próxima partida
+        </div>
       </ion-card-content>
     </ion-card>
   </div>

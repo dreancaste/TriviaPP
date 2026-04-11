@@ -243,6 +243,21 @@ ion-card-subtitle {
   text-transform: uppercase;
 }
 
+.back-btn {
+  margin-top: 18px;
+  height: 50px;
+  --border-radius: 14px;
+  --border-color: rgba(34, 197, 94, 0.35);
+  --color: #22c55e;
+  font-weight: 800;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+}
+
+.back-btn::part(native) {
+  backdrop-filter: blur(6px);
+}
+
 /* animación */
 @keyframes fadeInUp {
   from {

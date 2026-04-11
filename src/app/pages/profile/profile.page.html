@@ -1,55 +1,90 @@
-<ion-content class="profile-content">
+<ion-content class="profile-content" [fullscreen]="true">
   <div class="page-wrapper">
     <ion-card class="profile-card">
       <ion-card-header>
-        <ion-card-title>Mi perfil</ion-card-title>
+        <ion-card-title>Perfil Jedi</ion-card-title>
+        <ion-card-subtitle>Registro del comandante</ion-card-subtitle>
       </ion-card-header>
 
       <ion-card-content>
         <div class="avatar-box">
-          <img *ngIf="profile.avatar" [src]="profile.avatar" class="avatar">
-          <div *ngIf="!profile.avatar" class="avatar-placeholder">Sin foto</div>
+          <img
+            *ngIf="profile.avatar"
+            [src]="profile.avatar"
+            class="avatar"
+            alt="Avatar del usuario"
+          >
 
-          <ion-button expand="block" (click)="selectPhoto()">
+          <div *ngIf="!profile.avatar" class="avatar-placeholder">
+            Sin foto
+          </div>
+
+          <div class="profile-name">
+            {{ profile.displayName || 'Jugador galáctico' }}
+          </div>
+
+          <div class="profile-rank">
+            Identidad activa en la flota
+          </div>
+
+          <ion-button expand="block" class="photo-btn" (click)="selectPhoto()">
             Elegir / sacar foto
           </ion-button>
         </div>
 
-        <ion-item>
-          <ion-input
-            label="Nombre visible"
-            labelPlacement="stacked"
-            [(ngModel)]="profile.displayName">
-          </ion-input>
-        </ion-item>
+        <div class="profile-fields">
+          <ion-item lines="none">
+            <ion-input
+              label="Nombre visible"
+              labelPlacement="stacked"
+              placeholder="Ingresá tu nombre"
+              [(ngModel)]="profile.displayName">
+            </ion-input>
+          </ion-item>
 
-        <ion-item>
-          <ion-input
-            label="Email"
-            labelPlacement="stacked"
-            [value]="email"
-            readonly>
-          </ion-input>
-        </ion-item>
+          <ion-item lines="none">
+            <ion-input
+              label="Email"
+              labelPlacement="stacked"
+              [value]="email"
+              readonly>
+            </ion-input>
+          </ion-item>
 
-        <ion-item lines="none">
-          <ion-label>Vibrar al equivocarse</ion-label>
-          <ion-toggle [(ngModel)]="profile.vibrateOnError"></ion-toggle>
-        </ion-item>
+          <ion-item lines="none" class="toggle-item">
+            <ion-label>Vibrar al equivocarse</ion-label>
+            <ion-toggle [(ngModel)]="profile.vibrateOnError"></ion-toggle>
+          </ion-item>
+        </div>
 
         <div class="stats">
-          <p><strong>Partidas jugadas:</strong> {{ stats.gamesPlayed }}</p>
-          <p><strong>Respuestas correctas:</strong> {{ stats.correctAnswers }}</p>
-          <p><strong>Puntaje máximo:</strong> {{ stats.maxScore }}</p>
+          <div class="stat-row">
+            <span class="stat-label">Partidas jugadas</span>
+            <span class="stat-value">{{ stats.gamesPlayed }}</span>
+          </div>
+
+          <div class="stat-row">
+            <span class="stat-label">Respuestas correctas</span>
+            <span class="stat-value">{{ stats.correctAnswers }}</span>
+          </div>
+
+          <div class="stat-row">
+            <span class="stat-label">Puntaje máximo</span>
+            <span class="stat-value">{{ stats.maxScore }}</span>
+          </div>
         </div>
 
         <ion-button expand="block" class="save-btn" (click)="saveProfile()">
           Guardar perfil
         </ion-button>
 
-        <ion-button expand="block" fill="outline" (click)="goBack()">
+        <ion-button expand="block" fill="outline" class="back-btn" (click)="goBack()">
           Volver
         </ion-button>
+
+        <div class="profile-quote">
+          Que la <span>Fuerza</span> defina tu legado
+        </div>
       </ion-card-content>
     </ion-card>
   </div>

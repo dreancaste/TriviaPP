@@ -294,6 +294,21 @@
   text-transform: uppercase;
 }
 
+.back-btn {
+  margin-top: 18px;
+  height: 50px;
+  --border-radius: 14px;
+  --border-color: rgba(139, 92, 246, 0.35);
+  --color: #8b5cf6;
+  font-weight: 800;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+}
+
+.back-btn::part(native) {
+  backdrop-filter: blur(6px);
+}
+
 @keyframes fadeInUp {
   from {
     opacity: 0;
