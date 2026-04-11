@@ -1,53 +1,327 @@
 .trivia-content {
-  --background: radial-gradient(circle at top, #16213e 0%, #0b1020 70%);
+  --background:
+    radial-gradient(circle at top, rgba(255, 232, 31, 0.08) 0%, transparent 24%),
+    radial-gradient(circle at 18% 22%, rgba(255, 255, 255, 0.08) 0 1px, transparent 2px),
+    radial-gradient(circle at 82% 18%, rgba(255, 255, 255, 0.06) 0 1px, transparent 2px),
+    radial-gradient(circle at 22% 78%, rgba(255, 255, 255, 0.05) 0 1px, transparent 2px),
+    radial-gradient(circle at 76% 72%, rgba(255, 255, 255, 0.04) 0 1px, transparent 2px),
+    linear-gradient(180deg, #02050d 0%, #0a1020 38%, #111827 100%);
 }
 
 .page-wrapper {
-  padding: 16px;
+  min-height: 100vh;
+  padding: 20px 16px 32px;
+  position: relative;
+  overflow: hidden;
+}
+
+/* halo superior */
+.page-wrapper::before {
+  content: "";
+  position: absolute;
+  width: 580px;
+  height: 580px;
+  top: -190px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: radial-gradient(circle, rgba(255, 232, 31, 0.14) 0%, transparent 68%);
+  filter: blur(34px);
+  pointer-events: none;
+}
+
+/* textura sci-fi */
+.page-wrapper::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(135deg, rgba(255, 232, 31, 0.03), transparent 30%, transparent 70%, rgba(255, 232, 31, 0.03)),
+    repeating-linear-gradient(
+      90deg,
+      transparent 0,
+      transparent 52px,
+      rgba(255, 232, 31, 0.015) 53px,
+      transparent 54px
+    );
+  pointer-events: none;
 }
 
 .trivia-card {
-  max-width: 580px;
-  margin: 20px auto;
-  background: rgba(15, 23, 42, 0.96);
-  color: white;
-  border-radius: 18px;
-  border: 2px solid #ffe81f;
+  position: relative;
+  z-index: 2;
+  max-width: 620px;
+  margin: 22px auto;
+  background: rgba(8, 12, 22, 0.94);
+  color: #f8fafc;
+  border-radius: 24px;
+  overflow: hidden;
+  border: 1px solid rgba(255, 232, 31, 0.38);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  box-shadow:
+    0 0 0 1px rgba(255, 232, 31, 0.08),
+    0 0 22px rgba(255, 232, 31, 0.12),
+    0 0 60px rgba(255, 232, 31, 0.06),
+    0 24px 55px rgba(0, 0, 0, 0.62);
+  animation: fadeInUp 0.75s ease;
 }
 
-ion-card-title {
+/* borde energético */
+.trivia-card::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: 24px;
+  padding: 1px;
+  background: linear-gradient(
+    135deg,
+    rgba(255, 232, 31, 0.95),
+    rgba(255, 232, 31, 0.16),
+    rgba(255, 255, 255, 0.08),
+    rgba(0, 212, 255, 0.18)
+  );
+  -webkit-mask:
+    linear-gradient(#fff 0 0) content-box,
+    linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  pointer-events: none;
+}
+
+/* brillo interno */
+.trivia-card::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    180deg,
+    rgba(255, 232, 31, 0.08) 0%,
+    transparent 18%,
+    transparent 78%,
+    rgba(255, 232, 31, 0.03) 100%
+  );
+  pointer-events: none;
+}
+
+.trivia-card ion-card-header,
+.trivia-card ion-card-content {
+  position: relative;
+  z-index: 2;
+}
+
+.trivia-card ion-card-title {
   color: #ffe81f;
   text-align: center;
+  font-size: 30px;
+  font-weight: 900;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  text-shadow:
+    0 0 10px rgba(255, 232, 31, 0.45),
+    0 0 22px rgba(255, 232, 31, 0.20);
 }
 
+.trivia-card ion-card-subtitle {
+  text-align: center;
+  color: #9ca3af;
+  font-size: 12px;
+  letter-spacing: 1.6px;
+  text-transform: uppercase;
+}
+
+/* categoría */
 .category {
-  margin: 16px 0 8px 0;
-  color: #00d4ff;
-  font-weight: bold;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin: 12px 0 12px 0;
+  padding: 8px 14px;
+  border-radius: 999px;
+  background: rgba(0, 212, 255, 0.10);
+  border: 1px solid rgba(0, 212, 255, 0.22);
+  color: #67e8f9;
+  font-size: 13px;
+  font-weight: 800;
+  letter-spacing: 0.8px;
+  text-transform: uppercase;
+  box-shadow: 0 0 12px rgba(0, 212, 255, 0.08);
 }
 
+/* pregunta */
 .question {
-  margin: 16px 0 20px 0;
-  font-size: 22px;
+  margin: 14px 0 22px 0;
+  font-size: 25px;
+  line-height: 1.35;
+  font-weight: 800;
+  color: #f8fafc;
+  text-align: center;
+  text-shadow: 0 0 12px rgba(255, 255, 255, 0.04);
 }
 
+/* bloque de opciones */
+.options-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+/* botones de opción */
 .option-btn {
-  margin-bottom: 10px;
+  margin-bottom: 0;
+  height: 52px;
+  --border-radius: 14px;
+  --background: linear-gradient(135deg, rgba(255, 255, 255, 0.08), rgba(255, 255, 255, 0.04));
+  --color: #f8fafc;
+  --border-style: solid;
+  --border-width: 1px;
+  --border-color: rgba(255, 255, 255, 0.08);
+  --box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.04),
+    0 10px 20px rgba(0, 0, 0, 0.28);
+  font-weight: 700;
+  letter-spacing: 0.4px;
+  text-transform: none;
+  transition: transform 0.2s ease, filter 0.2s ease;
 }
 
+.option-btn:hover {
+  transform: translateY(-2px);
+  filter: brightness(1.05);
+}
+
+.option-btn:active {
+  transform: scale(0.985);
+}
+
+/* estado seleccionado / correcto / incorrecto */
+.option-btn.selected {
+  --background: linear-gradient(135deg, #38bdf8 0%, #00d4ff 100%);
+  --color: #000;
+  --border-color: rgba(0, 212, 255, 0.35);
+  --box-shadow:
+    0 0 14px rgba(0, 212, 255, 0.22),
+    0 10px 20px rgba(0, 0, 0, 0.30);
+}
+
+.option-btn.correct {
+  --background: linear-gradient(135deg, #22c55e 0%, #16a34a 100%);
+  --color: #fff;
+  --border-color: rgba(34, 197, 94, 0.35);
+  --box-shadow:
+    0 0 14px rgba(34, 197, 94, 0.22),
+    0 10px 20px rgba(0, 0, 0, 0.30);
+}
+
+.option-btn.wrong {
+  --background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+  --color: #fff;
+  --border-color: rgba(239, 68, 68, 0.35);
+  --box-shadow:
+    0 0 14px rgba(239, 68, 68, 0.20),
+    0 10px 20px rgba(0, 0, 0, 0.30);
+}
+
+/* feedback */
 .feedback {
-  margin-top: 16px;
-  font-weight: bold;
+  margin-top: 18px;
+  padding: 12px 14px;
+  border-radius: 14px;
+  font-weight: 800;
+  text-align: center;
+  letter-spacing: 0.4px;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.08);
 }
 
+.feedback.correct {
+  color: #86efac;
+  background: rgba(34, 197, 94, 0.10);
+  border-color: rgba(34, 197, 94, 0.20);
+  text-shadow: 0 0 8px rgba(34, 197, 94, 0.12);
+}
+
+.feedback.wrong {
+  color: #fca5a5;
+  background: rgba(239, 68, 68, 0.10);
+  border-color: rgba(239, 68, 68, 0.20);
+  text-shadow: 0 0 8px rgba(239, 68, 68, 0.10);
+}
+
+/* score */
 .score {
-  margin-top: 16px;
+  margin-top: 18px;
+  padding: 12px 14px;
+  border-radius: 14px;
+  text-align: center;
   color: #22c55e;
-  font-weight: bold;
+  font-size: 15px;
+  font-weight: 900;
+  letter-spacing: 0.8px;
+  text-transform: uppercase;
+  background: rgba(34, 197, 94, 0.08);
+  border: 1px solid rgba(34, 197, 94, 0.18);
+  text-shadow: 0 0 8px rgba(34, 197, 94, 0.16);
 }
 
+/* botón siguiente */
 .next-btn {
-  --background: #ffe81f;
-  --color: black;
-  margin-top: 10px;
+  margin-top: 14px;
+  height: 52px;
+  --background: linear-gradient(135deg, #ffe81f 0%, #ffd000 100%);
+  --color: #000;
+  --border-radius: 14px;
+  --box-shadow:
+    0 0 14px rgba(255, 232, 31, 0.30),
+    0 10px 20px rgba(0, 0, 0, 0.35);
+  font-weight: 900;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  transition: transform 0.2s ease, filter 0.2s ease;
+}
+
+.next-btn:hover {
+  transform: translateY(-2px);
+  filter: brightness(1.05);
+}
+
+.next-btn:active {
+  transform: scale(0.98);
+}
+
+/* progreso opcional */
+.progress-text {
+  margin-bottom: 12px;
+  text-align: center;
+  color: #94a3b8;
+  font-size: 13px;
+  letter-spacing: 0.5px;
+}
+
+/* barra de progreso opcional */
+.trivia-progress {
+  margin: 0 0 18px 0;
+  height: 10px;
+  background: rgba(255, 255, 255, 0.06);
+  border-radius: 999px;
+  overflow: hidden;
+  box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.35);
+}
+
+.trivia-progress .bar {
+  height: 100%;
+  border-radius: 999px;
+  background: linear-gradient(90deg, #00d4ff 0%, #ffe81f 100%);
+  box-shadow: 0 0 12px rgba(255, 232, 31, 0.22);
+  transition: width 0.3s ease;
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(28px) scale(0.985);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
 }
