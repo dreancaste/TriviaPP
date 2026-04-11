@@ -13,7 +13,7 @@ export class TriviaPage implements OnInit {
   currentQuestion!: TriviaQuestion;
   score = 0;
   questionNumber = 1;
-  totalQuestions = 15;
+  totalQuestions = 10;
   correctCount = 0;
   answered = false;
   selectedAnswer = '';
