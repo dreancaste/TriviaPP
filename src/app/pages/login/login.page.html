@@ -11,7 +11,8 @@
             label="Email"
             labelPlacement="stacked"
             type="email"
-            [(ngModel)]="email">
+            [(ngModel)]="email"
+          >
           </ion-input>
         </ion-item>
 
@@ -20,17 +21,29 @@
             label="Contraseña"
             labelPlacement="stacked"
             type="password"
-            [(ngModel)]="password">
+            [(ngModel)]="password"
+          >
           </ion-input>
         </ion-item>
 
         <p class="error-text" *ngIf="errorMessage">{{ errorMessage }}</p>
 
-        <ion-button expand="block" class="main-btn" (click)="login()" [disabled]="loading">
+        <ion-button
+          expand="block"
+          class="main-btn"
+          (click)="login()"
+          [disabled]="loading"
+        >
           {{ loading ? 'Ingresando...' : 'Iniciar sesión' }}
         </ion-button>
 
-        <ion-button expand="block" fill="outline" (click)="goToRegister()">
+        <ion-button
+          expand="block"
+          fill="outline"
+          class="secondary-btn"
+          (click)="goToRegister()"
+          [disabled]="loading"
+        >
           Registrarse
         </ion-button>
       </ion-card-content>
