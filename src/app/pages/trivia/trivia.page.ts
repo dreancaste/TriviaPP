@@ -56,7 +56,7 @@ export class TriviaPage implements OnInit {
 
       const profile = this.storageService.getProfile();
       if (profile.vibrateOnError) {
-        await Haptics.impact({ style: ImpactStyle.Heavy });
+        await Haptics.vibrate();
       }
     }
   }

@@ -4,6 +4,7 @@ import { AuthService } from '../../services/auth.service';
 
 @Component({
   selector: 'app-login',
+  standalone: false,
   templateUrl: './login.page.html',
   styleUrls: ['./login.page.scss']
 })
@@ -28,10 +29,15 @@ export class LoginPage {
 
     try {
       this.loading = true;
-      await this.authService.login(this.email, this.password);
-      this.router.navigateByUrl('/home', { replaceUrl: true });
-    } catch (error) {
-      this.errorMessage = 'No se pudo iniciar sesión';
+      const result = await this.authService.login(this.email, this.password);
+
+      if (result.isSignedIn) {
+        this.router.navigateByUrl('/home', { replaceUrl: true });
+      } else {
+        this.errorMessage = 'No se pudo completar el inicio de sesión';
+      }
+    } catch (error: any) {
+      this.errorMessage = error?.message || 'No se pudo iniciar sesión';
       console.error(error);
     } finally {
       this.loading = false;

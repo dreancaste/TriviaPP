@@ -1,61 +1,62 @@
-<ion-content class="register-content" [fullscreen]="true">
+<ion-content class="register-content">
   <div class="overlay">
     <ion-card class="register-card">
       <ion-card-header>
-        <ion-card-title>Registro Jedi</ion-card-title>
-        <ion-card-subtitle>Nueva identidad en la galaxia</ion-card-subtitle>
+        <ion-card-title *ngIf="step === 'register'">Registro Jedi</ion-card-title>
+        <ion-card-title *ngIf="step === 'confirm'">Confirmar cuenta</ion-card-title>
       </ion-card-header>
 
-      <ion-card-content>
-        <div class="form-fields">
-          <ion-item lines="none">
-            <ion-input
-              label="Email"
-              labelPlacement="stacked"
-              type="email"
-              inputmode="email"
-              autocomplete="email"
-              placeholder="Ingresá tu email"
-              [(ngModel)]="email">
-            </ion-input>
-          </ion-item>
+      <ion-card-content *ngIf="step === 'register'">
+        <ion-item>
+          <ion-input
+            label="Email"
+            labelPlacement="stacked"
+            type="email"
+            [(ngModel)]="email">
+          </ion-input>
+        </ion-item>
 
-          <ion-item lines="none">
-            <ion-input
-              label="Contraseña"
-              labelPlacement="stacked"
-              type="password"
-              autocomplete="new-password"
-              placeholder="Creá una contraseña"
-              [(ngModel)]="password">
-            </ion-input>
-          </ion-item>
-        </div>
+        <ion-item>
+          <ion-input
+            label="Contraseña"
+            labelPlacement="stacked"
+            type="password"
+            [(ngModel)]="password">
+          </ion-input>
+        </ion-item>
 
-        <p class="error-text" *ngIf="errorMessage">
-          {{ errorMessage }}
-        </p>
+        <p class="error-text" *ngIf="errorMessage">{{ errorMessage }}</p>
+        <p class="success-text" *ngIf="successMessage">{{ successMessage }}</p>
 
-        <ion-button
-          expand="block"
-          class="main-btn"
-          (click)="register()"
-          [disabled]="loading">
+        <ion-button expand="block" class="main-btn" (click)="register()" [disabled]="loading">
           {{ loading ? 'Registrando...' : 'Crear cuenta' }}
         </ion-button>
 
-        <ion-button
-          expand="block"
-          fill="outline"
-          class="secondary-btn"
-          (click)="goBack()"
-          [disabled]="loading">
+        <ion-button expand="block" fill="outline" (click)="goBack()">
           Volver
         </ion-button>
+      </ion-card-content>
 
-        <div class="register-extra">
-          Unite a la <span>alianza galáctica</span>
-        </div>
+      <ion-card-content *ngIf="step === 'confirm'">
+        <ion-item>
+          <ion-input
+            label="Código de confirmación"
+            labelPlacement="stacked"
+            type="text"
+            [(ngModel)]="code">
+          </ion-input>
+        </ion-item>
+
+        <p class="error-text" *ngIf="errorMessage">{{ errorMessage }}</p>
+        <p class="success-text" *ngIf="successMessage">{{ successMessage }}</p>
+
+        <ion-button expand="block" class="main-btn" (click)="confirmAccount()" [disabled]="loading">
+          {{ loading ? 'Confirmando...' : 'Confirmar cuenta' }}
+        </ion-button>
+
+        <ion-button expand="block" fill="outline" (click)="resendCode()" [disabled]="loading">
+          Reenviar código
+        </ion-button>
       </ion-card-content>
     </ion-card>
   </div>

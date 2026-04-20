@@ -29,11 +29,11 @@ export class ProfilePage implements OnInit {
     private router: Router
   ) {}
 
-  ngOnInit(): void {
-    this.profile = this.storageService.getProfile();
-    this.stats = this.storageService.getStats();
-    this.email = this.authService.userEmail;
-  }
+  async ngOnInit() {
+  this.profile = this.storageService.getProfile();
+  this.stats = this.storageService.getStats();
+  this.email = await this.authService.getUserEmail();
+}
 
   async selectPhoto() {
     const image = await Camera.getPhoto({

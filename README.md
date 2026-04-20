@@ -2,7 +2,7 @@
 
 Proyecto de trivia de Star Wars hecho con **Ionic + Angular + TypeScript**, usando:
 
-- Firebase Authentication para registro e inicio de sesión
+- AWS Cognito para registro e inicio de sesión
 - SWAPI para preguntas de Star Wars
 - Camera de Capacitor para foto de perfil
 - Haptics de Capacitor para vibración al responder mal
@@ -31,30 +31,7 @@ Abrí una terminal dentro de la carpeta del proyecto y corré:
 npm install
 ```
 
-## 4. Configurar Firebase
 
-### 4.1 Crear proyecto
-Entrá a Firebase Console y creá un proyecto nuevo.
-
-### 4.2 Registrar app web
-Dentro del proyecto, agregá una **Web App** y copiá el objeto de configuración.
-
-### 4.3 Activar login por email y contraseña
-Entrá en:
-
-- Authentication
-- Sign-in method
-- Email/Password
-- Enable
-
-### 4.4 Pegar configuración
-Abrí el archivo:
-
-```text
-src/firebase.config.ts
-```
-
-y reemplazá los valores por los tuyos.
 
 ## 5. Levantar la app en navegador
 

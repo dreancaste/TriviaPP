@@ -1,44 +1,63 @@
 import { Injectable } from '@angular/core';
-import { initializeApp, getApps, getApp } from 'firebase/app';
 import {
-  getAuth,
-  createUserWithEmailAndPassword,
-  signInWithEmailAndPassword,
+  signUp,
+  signIn,
   signOut,
-  onAuthStateChanged,
-  User
-} from 'firebase/auth';
-import { firebaseConfig } from '../../firebase.config';
+  getCurrentUser,
+  confirmSignUp,
+  resendSignUpCode
+} from 'aws-amplify/auth';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
-  private app = getApps().length ? getApp() : initializeApp(firebaseConfig);
-  private auth = getAuth(this.app);
-
-  register(email: string, password: string) {
-    return createUserWithEmailAndPassword(this.auth, email, password);
-  }
-
-  login(email: string, password: string) {
-    return signInWithEmailAndPassword(this.auth, email, password);
-  }
-
-  logout() {
-    return signOut(this.auth);
-  }
-
-  getCurrentUser(): Promise<User | null> {
-    return new Promise((resolve) => {
-      const unsubscribe = onAuthStateChanged(this.auth, (user) => {
-        resolve(user);
-        unsubscribe();
-      });
+  async register(email: string, password: string) {
+    return await signUp({
+      username: email,
+      password,
+      options: {
+        userAttributes: {
+          email
+        }
+      }
     });
   }
 
-  get userEmail(): string {
-    return this.auth.currentUser?.email || '';
+  async confirmRegister(email: string, code: string) {
+    return await confirmSignUp({
+      username: email,
+      confirmationCode: code
+    });
+  }
+
+  async resendCode(email: string) {
+    return await resendSignUpCode({
+      username: email
+    });
+  }
+
+  async login(email: string, password: string) {
+    return await signIn({
+      username: email,
+      password
+    });
+  }
+
+  async logout() {
+    return await signOut();
+  }
+
+  async getCurrentUser() {
+    try {
+      return await getCurrentUser();
+    } catch {
+      return null;
+    }
+  }
+
+  async getUserEmail(): Promise<string> {
+    const user = await this.getCurrentUser();
+    return user?.signInDetails?.loginId || '';
   }
 }
