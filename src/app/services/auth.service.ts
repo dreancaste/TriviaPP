@@ -1,17 +1,17 @@
-import { Injectable } from '@angular/core';
-import { initializeApp, getApps, getApp } from 'firebase/app';
+import { Injectable } from "@angular/core";
+import { initializeApp, getApps, getApp } from "firebase/app";
 import {
   getAuth,
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
   signOut,
   onAuthStateChanged,
-  User
-} from 'firebase/auth';
-import { firebaseConfig } from '../../firebase.config';
+  User,
+} from "firebase/auth";
+import { firebaseConfig } from "../../firebase.config";
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: "root",
 })
 export class AuthService {
   private app = getApps().length ? getApp() : initializeApp(firebaseConfig);
@@ -39,6 +39,6 @@ export class AuthService {
   }
 
   get userEmail(): string {
-    return this.auth.currentUser?.email || '';
+    return this.auth.currentUser?.email || "";
   }
 }

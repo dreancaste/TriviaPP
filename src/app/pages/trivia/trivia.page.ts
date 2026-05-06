@@ -1,8 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { Haptics, ImpactStyle } from '@capacitor/haptics';
-import { TriviaService, TriviaQuestion } from '../../services/trivia.service';
+import { TriviaService } from '../../services/trivia.service';
 import { StorageService } from '../../services/storage.service';
+import { TriviaQuestion } from '../../models/trivia-question.model';
+import { HistoryItem } from '../../models/history-item.model';
+import { RankingItem } from '../../models/ranking-item.model';
 
 @Component({
   selector: 'app-trivia',
@@ -28,9 +31,9 @@ export class TriviaPage implements OnInit {
   ) {}
 
   async ngOnInit() {
-  this.triviaService.resetUsedQuestions();
-  await this.loadQuestion();
-}
+    this.triviaService.resetUsedQuestions();
+    await this.loadQuestion();
+  }
 
   async loadQuestion() {
     this.loading = true;
@@ -72,38 +75,40 @@ export class TriviaPage implements OnInit {
   }
 
   finishGame() {
-    this.gameFinished = true;
+  this.gameFinished = true;
 
-    const profile = this.storageService.getProfile();
-    const displayName = profile.displayName || 'Jugador';
+  const profile = this.storageService.getProfile();
+  const displayName = profile.displayName || 'Jugador';
 
-    this.storageService.addHistory({
-      date: new Date().toLocaleString(),
-      score: this.score,
-      correctAnswers: this.correctCount,
-      totalQuestions: this.totalQuestions
-    });
+  const historyItem: HistoryItem = {
+    date: new Date().toLocaleString(),
+    score: this.score,
+    correctAnswers: this.correctCount,
+    totalQuestions: this.totalQuestions
+  };
 
-    this.storageService.addRankingItem({
-      name: displayName,
-      score: this.score
-    });
+  const rankingItem: RankingItem = {
+    name: displayName,
+    score: this.score
+  };
 
-    this.storageService.updateStats(this.score, this.correctCount);
-  }
+  this.storageService.addHistory(historyItem);
+  this.storageService.addRankingItem(rankingItem);
+  this.storageService.updateStats(this.score, this.correctCount);
+}
 
   goHome() {
     this.router.navigateByUrl('/home');
   }
 
   async playAgain() {
-  this.score = 0;
-  this.questionNumber = 1;
-  this.correctCount = 0;
-  this.gameFinished = false;
-  this.triviaService.resetUsedQuestions();
-  await this.loadQuestion();
-}
+    this.score = 0;
+    this.questionNumber = 1;
+    this.correctCount = 0;
+    this.gameFinished = false;
+    this.triviaService.resetUsedQuestions();
+    await this.loadQuestion();
+  }
 
   get progressValue(): number {
     return this.questionNumber / this.totalQuestions;
