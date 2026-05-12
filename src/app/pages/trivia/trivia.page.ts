@@ -6,6 +6,7 @@ import { StorageService } from "../../services/storage.service";
 import { TriviaQuestion } from "../../models/trivia-question.model";
 import { HistoryItem } from "../../models/history-item.model";
 import { RankingItem } from "../../models/ranking-item.model";
+import { RankingService } from '../../services/ranking.service';
 
 @Component({
   selector: "app-trivia",
@@ -25,10 +26,11 @@ export class TriviaPage implements OnInit {
   gameFinished = false;
 
   constructor(
-    private triviaService: TriviaService,
-    private storageService: StorageService,
-    private router: Router,
-  ) {}
+  private triviaService: TriviaService,
+  private storageService: StorageService,
+  private rankingService: RankingService,
+  private router: Router,
+) {}
 
   async ngOnInit() {
     this.triviaService.resetUsedQuestions();
@@ -82,28 +84,36 @@ export class TriviaPage implements OnInit {
 
   // Guarda resultados y estadísticas de la partida.
 
-  finishGame() {
-    this.gameFinished = true;
+  async finishGame() {
 
-    const profile = this.storageService.getProfile();
-    const displayName = profile.displayName || "Jugador";
+  this.gameFinished = true;
 
-    const historyItem: HistoryItem = {
-      date: new Date().toLocaleString(),
-      score: this.score,
-      correctAnswers: this.correctCount,
-      totalQuestions: this.totalQuestions,
-    };
+  const profile = this.storageService.getProfile();
+  const displayName = profile.displayName || "Jugador";
 
-    const rankingItem: RankingItem = {
-      name: displayName,
-      score: this.score,
-    };
+  const historyItem: HistoryItem = {
+    date: new Date().toLocaleString(),
+    score: this.score,
+    correctAnswers: this.correctCount,
+    totalQuestions: this.totalQuestions,
+  };
 
-    this.storageService.addHistory(historyItem);
-    this.storageService.addRankingItem(rankingItem);
-    this.storageService.updateStats(this.score, this.correctCount);
-  }
+  const rankingItem: RankingItem = {
+    name: displayName,
+    score: this.score,
+  };
+
+  // LocalStorage
+  this.storageService.addHistory(historyItem);
+  this.storageService.addRankingItem(rankingItem);
+  this.storageService.updateStats(this.score, this.correctCount);
+
+  // Firebase ranking online
+  await this.rankingService.addScore(
+    displayName,
+    this.score
+  );
+}
 
   goHome() {
     this.router.navigateByUrl("/home");
