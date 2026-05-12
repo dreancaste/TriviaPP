@@ -15,6 +15,8 @@ export class RankingPage implements OnInit {
     private router: Router
   ) {}
 
+  // Carga el ranking guardado al iniciar la página.
+
   ngOnInit(): void {
     this.ranking = this.storageService.getRanking();
   }
