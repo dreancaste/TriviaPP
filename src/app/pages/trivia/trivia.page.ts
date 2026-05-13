@@ -70,7 +70,7 @@ export class TriviaPage implements OnInit {
     }
   }
 
-  // Avanza a la siguiente pregunta o finaliza el juego.
+  // Avanza a la siguiente pregunta o finaliza el juego s.
 
   async nextQuestion() {
     if (this.questionNumber >= this.totalQuestions) {
