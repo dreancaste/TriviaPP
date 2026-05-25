@@ -1,0 +1,40 @@
+import { Component } from '@angular/core';
+import { Router } from '@angular/router';
+import { AuthService } from '../../services/auth.service';
+
+@Component({
+  selector: 'app-home',
+  templateUrl: './home.page.html',
+  styleUrls: ['./home.page.scss']
+})
+export class HomePage {
+  constructor(
+    private router: Router,
+    private authService: AuthService
+  ) {}
+
+  goToTrivia() {
+    this.router.navigateByUrl('/trivia');
+  }
+
+  goToWiki() {
+    this.router.navigateByUrl('/wiki');
+  }
+
+  goToProfile() {
+    this.router.navigateByUrl('/profile');
+  }
+
+  goToRanking() {
+    this.router.navigateByUrl('/ranking');
+  }
+
+  goToHistory() {
+    this.router.navigateByUrl('/history');
+  }
+
+  async logout() {
+    await this.authService.logout();
+    this.router.navigateByUrl('/login', { replaceUrl: true });
+  }
+}
