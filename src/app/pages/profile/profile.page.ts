@@ -34,6 +34,8 @@ export class ProfilePage implements OnInit {
     this.stats = this.storageService.getStats();
     this.email = this.authService.userEmail;
   }
+  
+  // Selecciona una foto de perfil del storage del celular.
 
   async selectPhoto() {
     const image = await Camera.getPhoto({
@@ -47,6 +49,8 @@ export class ProfilePage implements OnInit {
       this.profile.avatar = image.dataUrl;
     }
   }
+
+  // Guarda cambios de perfil.
 
   saveProfile() {
     this.storageService.saveProfile(this.profile);

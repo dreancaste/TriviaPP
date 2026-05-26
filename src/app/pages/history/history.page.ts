@@ -15,6 +15,8 @@ export class HistoryPage implements OnInit {
     private router: Router
   ) {}
 
+  // Muestra el historial del localstorage.
+
   ngOnInit(): void {
     this.history = this.storageService.getHistory();
   }

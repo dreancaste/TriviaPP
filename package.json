@@ -23,15 +23,17 @@
     "@capacitor/haptics": "^7.0.5",
     "@ionic/angular": "^8.4.3",
     "firebase": "^11.6.1",
-    "ionicons": "^7.4.0",
+    "ionicons": "^8.0.13",
     "rxjs": "^7.8.1",
+    "swiper": "^12.1.4",
     "tslib": "^2.6.2",
     "zone.js": "^0.14.10"
   },
   "devDependencies": {
     "@angular-devkit/build-angular": "^17.3.17",
-    "@angular/cli": "^17.3.17",
+    "@angular/cli": "17.3.17",
     "@angular/compiler-cli": "^17.3.12",
+    "@ionic/angular-toolkit": "^12.3.0",
     "@types/jasmine": "^5.1.4",
     "typescript": "^5.4.5"
   }

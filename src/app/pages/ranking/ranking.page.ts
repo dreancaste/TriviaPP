@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { StorageService } from '../../services/storage.service';
+
+import { RankingService } from '../../services/ranking.service';
 
 @Component({
   selector: 'app-ranking',
@@ -8,15 +9,18 @@ import { StorageService } from '../../services/storage.service';
   styleUrls: ['./ranking.page.scss']
 })
 export class RankingPage implements OnInit {
+
   ranking: any[] = [];
 
   constructor(
-    private storageService: StorageService,
+    private rankingService: RankingService,
     private router: Router
   ) {}
 
-  ngOnInit(): void {
-    this.ranking = this.storageService.getRanking();
+  // Carga el ranking diario desde Firebase.
+
+  async ngOnInit() {
+    this.ranking = await this.rankingService.getDailyRanking();
   }
 
   goBack() {

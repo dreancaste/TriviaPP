@@ -1,0 +1,149 @@
+<ion-content [fullscreen]="true">
+  <div class="hud-navbar">
+    <div class="back-button" (click)="volverAtras()"><</div>
+    <div class="breadcrumb">
+      <span class="active">WIKI</span>
+      <span class="separator">›</span>
+      <span class="inactive">{{ planeta.nombre.toUpperCase() }}</span>
+    </div>
+  </div>
+
+  <div class="planet-hero">
+    <img [src]="planetaImage" [alt]="planeta.nombre" class="hero-bg" />
+
+    <div class="overlay"></div>
+
+    <div class="hero-content">
+      <h1 class="hero-title">{{ planeta.nombre }}</h1>
+      <p class="hero-description">{{ planeta.descripcion }}</p>
+
+      <div class="hero-stats-col secciones-contenedor">
+        <ion-list lines="none">
+          <ion-item *ngFor="let stat of planeta.stats">
+            <img [src]="stat.icon" class="bullet-icon" slot="start" />
+
+            <div class="stat-content">
+              <span class="titulo-dorado titulo-dorado--sm">
+                {{ stat.label }}
+              </span>
+
+              <span class="stat-value"> {{ stat.value }} </span>
+            </div>
+          </ion-item>
+        </ion-list>
+      </div>
+    </div>
+  </div>
+
+  <ion-grid class="planet-content">
+    <!-- GALERIA -->
+    <ion-row>
+      <ion-col size="12" class="secciones-contenedor">
+        <h2 class="titulo-dorado">Galería</h2>
+        <swiper-container
+          #swiper
+          slides-per-view="3"
+          [breakpoints]="{
+            '480':  { slidesPerView: 3 },
+            '768':  { slidesPerView: 4 },
+            '1024': { slidesPerView: 5 }
+          }"
+          space-between="12"
+          navigation="true"
+          grab-cursor="true"
+        >
+          <swiper-slide *ngFor="let img of planeta.imagenes; let i = index">
+            <div
+              class="galeria-slide imagen-frame"
+              (click)="abrirImagen(i)"
+              [class.selected]="selectedIndex === i"
+            >
+              <img [src]="img" class="swiper-img" />
+            </div>
+          </swiper-slide>
+        </swiper-container>
+      </ion-col>
+    </ion-row>
+
+    <!-- DATOS CURIOSOS + MAPA -->
+    <ion-row class="datos-mapa-row">
+      <ion-col size="12" size-md="5" class="secciones-contenedor">
+        <h2 class="titulo-dorado">Datos Curiosos</h2>
+        <ion-list lines="none">
+          <ion-item *ngFor="let item of planeta.datosCuriosos">
+            <img
+              src="assets/icons/chewbacca.svg"
+              class="bullet-icon"
+              slot="start"
+            />
+            <ion-label>{{ item }}</ion-label>
+          </ion-item>
+        </ion-list>
+      </ion-col>
+
+      <ion-col size="12" size-md="7" class="secciones-contenedor mapa-col">
+        <h2 class="titulo-dorado">Mapa del planeta</h2>
+
+        <div class="mapa-frame">
+          <img [src]="mapaImage" class="mapa-img" />
+        </div>
+      </ion-col>
+    </ion-row>
+
+    <!-- ASOCIADOS -->
+    <ion-row>
+      <ion-col size="12">
+        <div class="secciones-contenedor">
+          <h2 class="titulo-dorado">Asociado A</h2>
+
+          <!-- DESKTOP -->
+          <ion-row class="asociados-row asociados-desktop">
+            <ion-col
+              size="6"
+              size-sm="3"
+              *ngFor="let asociado of planeta.asociados"
+            >
+              <ion-card class="imagen-frame asociado-card">
+                <ion-card-header>
+                  <ion-card-subtitle class="titulo-dorado">
+                    {{ asociado.tipo }}
+                  </ion-card-subtitle>
+
+                  <ion-card-title class="subtitulo">
+                    {{ asociado.nombre }}
+                  </ion-card-title>
+                </ion-card-header>
+
+                <ion-card-content>
+                  <ion-img [src]="asociado.imagen"></ion-img>
+                </ion-card-content>
+              </ion-card>
+            </ion-col>
+          </ion-row>
+
+          <!-- MOBILE -->
+          <div class="asociados-mobile">
+            <div
+              class="asociado-item"
+              *ngFor="let asociado of planeta.asociados; let i = index"
+              (click)="seleccionarAsociado(i)"
+              [class.selected]="selectedAsociado === i"
+            >
+              <div class="asociado-item-info">
+                <span class="asociado-tipo"> {{ asociado.tipo }} </span>
+
+                <span class="asociado-nombre"> {{ asociado.nombre }} </span>
+              </div>
+
+              <div class="asociado-item-img">
+                <img [src]="asociado.imagen" />
+              </div>
+
+              <ion-icon name="chevron-forward-outline"></ion-icon>
+            </div>
+          </div>
+        </div>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+</ion-content>

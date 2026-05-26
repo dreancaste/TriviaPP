@@ -15,13 +15,9 @@
           <div class="bar" [style.width.%]="progressValue * 100"></div>
         </div>
 
-        <div class="category">
-          {{ currentQuestion.category }}
-        </div>
+        <div class="category">{{ currentQuestion.category }}</div>
 
-        <h2 class="question">
-          {{ currentQuestion.question }}
-        </h2>
+        <h2 class="question">{{ currentQuestion.question }}</h2>
 
         <div class="options-list">
           <ion-button
@@ -34,7 +30,8 @@
               'wrong': answered && option === selectedAnswer && option !== currentQuestion.correctAnswer,
               'selected': !answered && option === selectedAnswer
             }"
-            (click)="answer(option)">
+            (click)="answer(option)"
+          >
             {{ option }}
           </ion-button>
         </div>
@@ -50,15 +47,14 @@
           {{ feedback }}
         </div>
 
-        <div class="score">
-          Puntaje actual: {{ score }}
-        </div>
+        <div class="score">Puntaje actual: {{ score }}</div>
 
         <ion-button
           expand="block"
           class="next-btn"
           *ngIf="answered"
-          (click)="nextQuestion()">
+          (click)="nextQuestion()"
+        >
           {{ questionNumber === totalQuestions ? 'Finalizar' : 'Siguiente' }}
         </ion-button>
 
@@ -66,15 +62,14 @@
           expand="block"
           fill="outline"
           class="back-btn"
-          (click)="goHome()">
+          (click)="goHome()"
+        >
           Volver
         </ion-button>
       </ion-card-content>
 
       <ion-card-content *ngIf="loading">
-        <div class="loading-state">
-          Cargando pregunta...
-        </div>
+        <div class="loading-state">Cargando pregunta...</div>
       </ion-card-content>
     </ion-card>
 
@@ -93,7 +88,9 @@
 
           <div class="stat-row">
             <span class="stat-label">Aciertos</span>
-            <span class="stat-value">{{ correctCount }} / {{ totalQuestions }}</span>
+            <span class="stat-value"
+              >{{ correctCount }} / {{ totalQuestions }}</span
+            >
           </div>
         </div>
 
@@ -105,7 +102,8 @@
           expand="block"
           fill="outline"
           class="back-btn"
-          (click)="goHome()">
+          (click)="goHome()"
+        >
           Volver al menú
         </ion-button>
       </ion-card-content>

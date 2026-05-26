@@ -1,0 +1,168 @@
+.wiki-content {
+  --background:
+    radial-gradient(circle at top, rgba(244, 63, 94, 0.12) 0%, transparent 28%),
+    radial-gradient(circle at 18% 22%, rgba(255, 255, 255, 0.08) 0 1px, transparent 2px),
+    radial-gradient(circle at 82% 20%, rgba(255, 255, 255, 0.07) 0 1px, transparent 2px),
+    radial-gradient(circle at 24% 76%, rgba(255, 255, 255, 0.05) 0 1px, transparent 2px),
+    radial-gradient(circle at 76% 72%, rgba(255, 255, 255, 0.04) 0 1px, transparent 2px),
+    linear-gradient(180deg, #110314 0%, #240227 32%, #3b0a41 68%, #1f0831 100%);
+}
+
+.overlay {
+  min-height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  position: relative;
+  overflow: hidden;
+}
+
+.overlay::before {
+  content: "";
+  position: absolute;
+  width: 560px;
+  height: 560px;
+  top: -170px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: radial-gradient(circle, rgba(244, 63, 94, 0.18) 0%, transparent 68%);
+  filter: blur(34px);
+  pointer-events: none;
+}
+
+.overlay::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(135deg, rgba(244, 63, 94, 0.04), transparent 30%, transparent 70%, rgba(244, 63, 94, 0.04)),
+    repeating-linear-gradient(
+      90deg,
+      transparent 0,
+      transparent 52px,
+      rgba(244, 63, 94, 0.02) 53px,
+      transparent 54px
+    );
+  pointer-events: none;
+}
+
+.wiki-card {
+  width: 100%;
+  max-width: 900px;
+  position: relative;
+  z-index: 2;
+  background: rgba(24, 5, 32, 0.96);
+  color: white;
+  border-radius: 26px;
+  overflow: hidden;
+  border: 1px solid rgba(244, 63, 94, 0.35);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  box-shadow:
+    0 0 0 1px rgba(244, 63, 94, 0.08),
+    0 0 22px rgba(244, 63, 94, 0.10),
+    0 0 60px rgba(244, 63, 94, 0.06),
+    0 22px 55px rgba(0, 0, 0, 0.62);
+}
+
+.wiki-header {
+  padding: 32px 28px 12px;
+  text-align: center;
+}
+
+.wiki-header h2 {
+  color: #fc1cdb;
+  font-size: 32px;
+  font-weight: 900;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  margin-bottom: 10px;
+  text-shadow:
+    0 0 10px rgba(244, 63, 94, 0.45),
+    0 0 22px rgba(244, 63, 94, 0.22);
+}
+
+.wiki-header p {
+  color: #9ca3af;
+  margin: 0 auto;
+  max-width: 560px;
+  font-size: 14px;
+  letter-spacing: 1px;
+}
+
+.contenedor-principal {
+  display: flex;
+  gap: 15px;
+  flex-wrap: wrap;
+  padding: 24px 28px 16px;
+}
+
+.contenedor-principal > div {
+  flex: 1 1 0;
+  min-width: 220px;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.02);
+  padding: 28px 20px;
+  text-align: center;
+  border-radius: 18px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 170px;
+}
+
+.contenedor-principal h3 {
+  margin: 0;
+  color: #f8fafc;
+  font-size: 1.15rem;
+  letter-spacing: 0.04em;
+}
+
+// .menu-btn {
+//   margin: 0 28px 24px;
+//   font-weight: 800;
+//   letter-spacing: 1px;
+//   text-transform: uppercase;
+//   height: 52px;
+//   --border-radius: 14px;
+//   --box-shadow:
+//     0 10px 20px rgba(0, 0, 0, 0.35),
+//     0 0 12px rgba(255, 255, 255, 0.04);
+//   transition: transform 0.2s ease, filter 0.2s ease;
+// }
+
+.menu-btn:hover {
+  transform: translateY(-2px);
+  filter: brightness(1.06);
+}
+
+.menu-btn:active {
+  transform: scale(0.98);
+}
+
+.back-btn {
+  margin-top: 18px;
+  margin-bottom: 24px;
+  padding: 0 28px 0;
+  height: 60px;
+  --border-radius: 14px;
+  --border-color: rgba(244, 63, 94, 0.35);
+  --color: #fc1cdb;
+  font-weight: 800;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+}
+
+.back-btn::part(native) {
+  backdrop-filter: blur(6px);
+}
+
+.rose {
+  --background: linear-gradient(135deg, #f43f5e 0%, #FC1CD9 100%);
+  --color: #ffffff;
+  --box-shadow:
+    0 0 14px rgba(244, 63, 94, 0.30),
+    0 10px 20px rgba(255, 255, 255, 0.15);
+}

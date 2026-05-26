@@ -1,14 +1,19 @@
 import { Injectable } from "@angular/core";
 import { SwapiService } from "./swapi.service";
 import { TriviaQuestion } from "../models/trivia-question.model";
+import { TranslationService } from "./translation.service";
 
 @Injectable({
   providedIn: "root",
 })
 export class TriviaService {
+
   private usedQuestionKeys: string[] = [];
 
-  constructor(private swapiService: SwapiService) {}
+  constructor(
+    private swapiService: SwapiService,
+    private translationService: TranslationService
+  ) {}
 
   private loreQuestions: TriviaQuestion[] = [
     {
@@ -133,51 +138,6 @@ export class TriviaService {
     },
   ];
 
-  private translations: { [key: string]: string } = {
-    male: "Masculino",
-    female: "Femenino",
-    "n/a": "No aplica",
-    unknown: "Desconocido",
-
-    blue: "Azul",
-    green: "Verde",
-    brown: "Marrón",
-    black: "Negro",
-    blond: "Rubio",
-    blonde: "Rubio",
-    auburn: "Castaño rojizo",
-    white: "Blanco",
-    grey: "Gris",
-    gray: "Gris",
-    hazel: "Avellana",
-    yellow: "Amarillo",
-    red: "Rojo",
-    orange: "Naranja",
-
-    desert: "Desierto",
-    mountains: "Montañas",
-    jungle: "Jungla",
-    forest: "Bosque",
-    grasslands: "Praderas",
-    plains: "Llanuras",
-    ocean: "Océano",
-    rocky: "Rocoso",
-    swamp: "Pantano",
-    tundra: "Tundra",
-    ice: "Hielo",
-    volcanic: "Volcánico",
-
-    arid: "Árido",
-    temperate: "Templado",
-    tropical: "Tropical",
-    frozen: "Helado",
-    murky: "Brumoso",
-    windy: "Ventoso",
-    hot: "Caluroso",
-    humid: "Húmedo",
-    polluted: "Contaminado",
-  };
-
   resetUsedQuestions(): void {
     this.usedQuestionKeys = [];
   }
@@ -200,6 +160,7 @@ export class TriviaService {
     wrongAnswers: string[],
     totalOptions: number = 4,
   ): string[] {
+
     const unique = new Set<string>();
 
     if (correctAnswer && correctAnswer.trim() !== "") {
@@ -207,6 +168,7 @@ export class TriviaService {
     }
 
     for (const answer of wrongAnswers) {
+
       if (
         answer &&
         answer.trim() !== "" &&
@@ -228,28 +190,8 @@ export class TriviaService {
     return text.charAt(0).toUpperCase() + text.slice(1);
   }
 
-  private translateText(text: string): string {
-    if (!text) return "";
-
-    const normalized = text.trim().toLowerCase();
-
-    if (this.translations[normalized]) {
-      return this.translations[normalized];
-    }
-
-    return this.capitalizeFirst(text);
-  }
-
-  private translateListText(text: string): string {
-    if (!text) return "";
-
-    return text
-      .split(",")
-      .map((part) => this.translateText(part.trim()))
-      .join(", ");
-  }
-
   private generateLoreQuestion(): TriviaQuestion {
+
     const availableQuestions = this.loreQuestions.filter(
       (q) => !this.usedQuestionKeys.includes(q.question),
     );
@@ -260,10 +202,12 @@ export class TriviaService {
     }
 
     const randomIndex = Math.floor(Math.random() * availableQuestions.length);
+
     return availableQuestions[randomIndex];
   }
 
   async generateQuestion(): Promise<TriviaQuestion> {
+
     const random = Math.random();
 
     if (random < 0.6) {
@@ -277,8 +221,10 @@ export class TriviaService {
     ];
 
     for (let i = 0; i < 10; i++) {
+
       const randomGenerator =
         generators[Math.floor(Math.random() * generators.length)];
+
       const question = await randomGenerator();
 
       if (!this.usedQuestionKeys.includes(question.question)) {
@@ -290,18 +236,29 @@ export class TriviaService {
   }
 
   private async generatePeopleQuestion(): Promise<TriviaQuestion> {
+
     const response = await this.swapiService.getPeople(1);
-    const people = response.results.filter((p: any) => p.homeworld);
+
+    const people = response.results.filter(
+      (p: any) => p.homeworld
+    );
 
     const person = people[Math.floor(Math.random() * people.length)];
-    const correctPlanet = await this.swapiService.getByUrl(person.homeworld);
+
+    const correctPlanet =
+      await this.swapiService.getByUrl(person.homeworld);
 
     const wrongPlanets: string[] = [];
 
     for (const candidate of this.getRandomItems(people, people.length)) {
-      if (!candidate.homeworld || candidate.name === person.name) continue;
 
-      const planet = await this.swapiService.getByUrl(candidate.homeworld);
+      if (!candidate.homeworld || candidate.name === person.name) {
+        continue;
+      }
+
+      const planet =
+        await this.swapiService.getByUrl(candidate.homeworld);
+
       if (planet?.name) {
         wrongPlanets.push(planet.name);
       }
@@ -311,14 +268,18 @@ export class TriviaService {
       }
     }
 
-    let options = this.buildUniqueOptions(correctPlanet.name, wrongPlanets, 4);
+    let options = this.buildUniqueOptions(
+      correctPlanet.name,
+      wrongPlanets,
+      4
+    );
 
     while (options.length < 4) {
       options.push(`Opción ${options.length + 1}`);
     }
 
-    options = this.shuffleArray(options).map((option) =>
-      this.capitalizeFirst(option),
+    options = this.shuffleArray(options).map(
+      (option) => this.capitalizeFirst(option)
     );
 
     return {
@@ -330,21 +291,33 @@ export class TriviaService {
   }
 
   private async generatePlanetQuestion(): Promise<TriviaQuestion> {
+
     const response = await this.swapiService.getPlanets(1);
+
     const planets = response.results.filter(
-      (p: any) => p.climate && p.climate !== "unknown",
+      (p: any) => p.climate && p.climate !== "unknown"
     );
 
-    const planet = planets[Math.floor(Math.random() * planets.length)];
+    const planet =
+      planets[Math.floor(Math.random() * planets.length)];
 
     const wrongAnswers = planets
       .filter((p: any) => p.name !== planet.name)
       .map((p: any) => p.climate);
 
+    const translatedCorrectAnswer =
+      await this.translationService.translate(planet.climate);
+
+    const translatedWrongAnswers = await Promise.all(
+      wrongAnswers.map(answer =>
+        this.translationService.translate(answer)
+      )
+    );
+
     let options = this.buildUniqueOptions(
-      this.translateListText(planet.climate),
-      wrongAnswers.map((answer) => this.translateListText(answer)),
-      4,
+      translatedCorrectAnswer,
+      translatedWrongAnswers,
+      4
     );
 
     while (options.length < 4) {
@@ -356,18 +329,21 @@ export class TriviaService {
     return {
       question: `¿Cuál es el clima de ${planet.name}?`,
       options,
-      correctAnswer: this.translateListText(planet.climate),
+      correctAnswer: translatedCorrectAnswer,
       category: "Planetas",
     };
   }
 
   private async generateFilmQuestion(): Promise<TriviaQuestion> {
+
     const response = await this.swapiService.getFilms();
+
     const films = response.results.filter(
-      (f: any) => f.director && f.director !== "unknown",
+      (f: any) => f.director && f.director !== "unknown"
     );
 
-    const film = films[Math.floor(Math.random() * films.length)];
+    const film =
+      films[Math.floor(Math.random() * films.length)];
 
     const wrongAnswers = films
       .filter((f: any) => f.title !== film.title)
@@ -375,8 +351,10 @@ export class TriviaService {
 
     let options = this.buildUniqueOptions(
       this.capitalizeFirst(film.director),
-      wrongAnswers.map((answer) => this.capitalizeFirst(answer)),
-      4,
+      wrongAnswers.map(
+        (answer) => this.capitalizeFirst(answer)
+      ),
+      4
     );
 
     while (options.length < 4) {

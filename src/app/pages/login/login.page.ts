@@ -17,6 +17,8 @@ export class LoginPage {
     private authService: AuthService,
     private router: Router
   ) {}
+  
+  // Login, requiere email y contrasenia correcta.
 
   async login() {
     this.errorMessage = '';
@@ -37,6 +39,8 @@ export class LoginPage {
       this.loading = false;
     }
   }
+
+  // Redirije a la pagina registro.
 
   goToRegister() {
     this.router.navigateByUrl('/register');

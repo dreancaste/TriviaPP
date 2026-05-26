@@ -1,16 +1,17 @@
-import { Component, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
-import { Haptics, ImpactStyle } from '@capacitor/haptics';
-import { TriviaService } from '../../services/trivia.service';
-import { StorageService } from '../../services/storage.service';
-import { TriviaQuestion } from '../../models/trivia-question.model';
-import { HistoryItem } from '../../models/history-item.model';
-import { RankingItem } from '../../models/ranking-item.model';
+import { Component, OnInit } from "@angular/core";
+import { Router } from "@angular/router";
+import { Haptics, ImpactStyle } from "@capacitor/haptics";
+import { TriviaService } from "../../services/trivia.service";
+import { StorageService } from "../../services/storage.service";
+import { TriviaQuestion } from "../../models/trivia-question.model";
+import { HistoryItem } from "../../models/history-item.model";
+import { RankingItem } from "../../models/ranking-item.model";
+import { RankingService } from '../../services/ranking.service';
 
 @Component({
-  selector: 'app-trivia',
-  templateUrl: './trivia.page.html',
-  styleUrls: ['./trivia.page.scss']
+  selector: "app-trivia",
+  templateUrl: "./trivia.page.html",
+  styleUrls: ["./trivia.page.scss"],
 })
 export class TriviaPage implements OnInit {
   currentQuestion!: TriviaQuestion;
@@ -19,30 +20,35 @@ export class TriviaPage implements OnInit {
   totalQuestions = 10;
   correctCount = 0;
   answered = false;
-  selectedAnswer = '';
-  feedback = '';
+  selectedAnswer = "";
+  feedback = "";
   loading = true;
   gameFinished = false;
 
   constructor(
-    private triviaService: TriviaService,
-    private storageService: StorageService,
-    private router: Router
-  ) {}
+  private triviaService: TriviaService,
+  private storageService: StorageService,
+  private rankingService: RankingService,
+  private router: Router,
+) {}
 
   async ngOnInit() {
     this.triviaService.resetUsedQuestions();
     await this.loadQuestion();
   }
 
+  // Carga una nueva pregunta.
+
   async loadQuestion() {
     this.loading = true;
     this.answered = false;
-    this.selectedAnswer = '';
-    this.feedback = '';
+    this.selectedAnswer = "";
+    this.feedback = "";
     this.currentQuestion = await this.triviaService.generateQuestion();
     this.loading = false;
   }
+
+  // Procesa la respuesta seleccionada por el usuario.
 
   async answer(option: string) {
     if (this.answered) return;
@@ -53,7 +59,7 @@ export class TriviaPage implements OnInit {
     if (option === this.currentQuestion.correctAnswer) {
       this.score += 100;
       this.correctCount += 1;
-      this.feedback = '¡Correcto, joven padawan!';
+      this.feedback = "¡Correcto, joven padawan!";
     } else {
       this.feedback = `Incorrecto. La respuesta era: ${this.currentQuestion.correctAnswer}`;
 
@@ -63,6 +69,8 @@ export class TriviaPage implements OnInit {
       }
     }
   }
+
+  // Avanza a la siguiente pregunta o finaliza el juego s.
 
   async nextQuestion() {
     if (this.questionNumber >= this.totalQuestions) {
@@ -74,32 +82,44 @@ export class TriviaPage implements OnInit {
     await this.loadQuestion();
   }
 
-  finishGame() {
+  // Guarda resultados y estadísticas de la partida.
+
+  async finishGame() {
+
   this.gameFinished = true;
 
   const profile = this.storageService.getProfile();
-  const displayName = profile.displayName || 'Jugador';
+  const displayName = profile.displayName || "Jugador";
 
   const historyItem: HistoryItem = {
     date: new Date().toLocaleString(),
     score: this.score,
     correctAnswers: this.correctCount,
-    totalQuestions: this.totalQuestions
+    totalQuestions: this.totalQuestions,
   };
 
   const rankingItem: RankingItem = {
     name: displayName,
-    score: this.score
+    score: this.score,
   };
 
+  // LocalStorage
   this.storageService.addHistory(historyItem);
   this.storageService.addRankingItem(rankingItem);
   this.storageService.updateStats(this.score, this.correctCount);
+
+  // Firebase ranking online
+  await this.rankingService.addScore(
+    displayName,
+    this.score
+  );
 }
 
   goHome() {
-    this.router.navigateByUrl('/home');
+    this.router.navigateByUrl("/home");
   }
+
+  // Reinicia la partida.
 
   async playAgain() {
     this.score = 0;
@@ -109,6 +129,8 @@ export class TriviaPage implements OnInit {
     this.triviaService.resetUsedQuestions();
     await this.loadQuestion();
   }
+
+  // Reinicia la partida.
 
   get progressValue(): number {
     return this.questionNumber / this.totalQuestions;

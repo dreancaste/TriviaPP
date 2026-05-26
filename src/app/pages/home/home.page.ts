@@ -13,6 +13,8 @@ export class HomePage {
     private authService: AuthService
   ) {}
 
+  // Redirecciones.
+
   goToTrivia() {
     this.router.navigateByUrl('/trivia');
   }
@@ -28,6 +30,13 @@ export class HomePage {
   goToHistory() {
     this.router.navigateByUrl('/history');
   }
+  goToWiki() {
+    this.router.navigateByUrl('/wiki');
+  }
+  goToPlanetDetail() {
+    this.router.navigateByUrl('/planet-detail');
+  }
+  // Utiliza el logout de autenticacion, redireccionando al login.
 
   async logout() {
     await this.authService.logout();
