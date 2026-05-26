@@ -191,6 +191,15 @@
     0 10px 20px rgba(0, 0, 0, 0.35);
 }
 
+.orange {
+  --background: linear-gradient(135deg, #f97316 0%, #ea580c 100%);
+  --color: #fff;
+  --box-shadow:
+    0 0 14px rgba(249, 115, 22, 0.28),
+    0 10px 20px rgba(0, 0, 0, 0.35);
+}
+
+
 /* opcional: texto decorativo abajo */
 .home-quote {
   margin-top: 18px;

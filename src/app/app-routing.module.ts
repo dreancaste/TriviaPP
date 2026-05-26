@@ -36,7 +36,17 @@ const routes: Routes = [
     path: 'history',
     canActivate: [AuthGuard],
     loadChildren: () => import('./pages/history/history.module').then(m => m.HistoryPageModule)
+  },
+  {
+    path: 'wiki',
+    canActivate: [AuthGuard],
+    loadChildren: () => import('./pages/wiki/wiki.module').then(m => m.WikiPageModule)
+  },
+  {
+    path: 'planet-detail',
+    loadChildren: () => import('./pages/planet-detail/planet-detail.module').then( m => m.PlanetDetailPageModule)
   }
+
 ];
 
 @NgModule({
