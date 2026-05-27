@@ -279,6 +279,31 @@ swiper-slide {
   }
 }
 
+.datos-mapa-row.sin-mapa {
+  grid-template-columns: 1fr;
+}
+
+.detail-state {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  color: #f2e7b3;
+  background: #050816;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+}
+
+.entity-type {
+  width: fit-content;
+  color: #c59439;
+  font-size: 13px;
+  font-weight: 800;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+}
+
 .mapa-col {
   .mapa-wrapper {
     flex: 1;

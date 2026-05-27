@@ -16,14 +16,26 @@ export class SwapiService {
     );
   }
 
+  getPerson(id: string): Promise<any> {
+    return firstValueFrom(this.http.get(`${this.baseUrl}/people/${id}/`));
+  }
+
   getPlanets(page: number = 1): Promise<any> {
     return firstValueFrom(
       this.http.get(`${this.baseUrl}/planets/?page=${page}`),
     );
   }
 
+  getPlanet(id: string): Promise<any> {
+    return firstValueFrom(this.http.get(`${this.baseUrl}/planets/${id}/`));
+  }
+
   getFilms(): Promise<any> {
     return firstValueFrom(this.http.get(`${this.baseUrl}/films/`));
+  }
+
+  getFilm(id: string): Promise<any> {
+    return firstValueFrom(this.http.get(`${this.baseUrl}/films/${id}/`));
   }
 
   getByUrl(url: string): Promise<any> {
