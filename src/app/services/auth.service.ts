@@ -1,44 +1,59 @@
 import { Injectable } from "@angular/core";
-import { initializeApp, getApps, getApp } from "firebase/app";
-import {
-  getAuth,
-  createUserWithEmailAndPassword,
-  signInWithEmailAndPassword,
-  signOut,
-  onAuthStateChanged,
-  User,
-} from "firebase/auth";
-import { firebaseConfig } from "../../firebase.config";
+
+import { signUp, signIn, signOut, confirmSignUp, getCurrentUser, fetchAuthSession } from 'aws-amplify/auth';
 
 @Injectable({
   providedIn: "root",
 })
 export class AuthService {
-  private app = getApps().length ? getApp() : initializeApp(firebaseConfig);
-  private auth = getAuth(this.app);
+  
+  private currentEmail: string = "";
 
-  register(email: string, password: string) {
-    return createUserWithEmailAndPassword(this.auth, email, password);
+  constructor() {}
+
+  async register(email: string, password: string) {
+    return signUp({ username: email, password });
   }
 
-  login(email: string, password: string) {
-    return signInWithEmailAndPassword(this.auth, email, password);
+  async confirmarRegistro(email: string, codigo: string) {
+    return confirmSignUp({ username: email, confirmationCode: codigo });
   }
 
-  logout() {
-    return signOut(this.auth);
+  // Mantenemos el nombre. Guardamos el mail temporalmente en memoria al loguear.
+  async login(email: string, password: string) {
+    const response = await signIn({ username: email, password });
+    if (response.isSignedIn) {
+      this.currentEmail = email; 
+    }
+    return response;
   }
 
-  getCurrentUser(): Promise<User | null> {
-    return new Promise((resolve) => {
-      const unsubscribe = onAuthStateChanged(this.auth, (user) => {
-        resolve(user);
-        unsubscribe();
-      });
-    });
+  async logout() {
+    this.currentEmail = "";
+    return signOut();
+  }
+
+  async getCurrentUser(): Promise<any | null> {
+    try {
+      const user = await getCurrentUser();
+      this.currentEmail = user.signInDetails?.loginId || ""; 
+      return user;
+    } catch (error) {
+      this.currentEmail = "";
+      return null; 
+    }
   }
 
   get userEmail(): string {
-    return this.auth.currentUser?.email || "";
+    return this.currentEmail;
+  }
+
+  async obtenerTokenJWT() {
+    try {
+      const session = await fetchAuthSession();
+      return session.tokens?.idToken?.toString() || null;
+    } catch (error) {
+      return null;
+    }
   }
 }

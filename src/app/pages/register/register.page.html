@@ -2,12 +2,13 @@
   <div class="overlay">
     <ion-card class="register-card">
       <ion-card-header>
-        <ion-card-title>Registro Jedi</ion-card-title>
-        <ion-card-subtitle>Nueva identidad en la galaxia</ion-card-subtitle>
+        <ion-card-title>{{ pasoConfirmacion ? 'Transmisión Recibida' : 'Registro Jedi' }}</ion-card-title>
+        <ion-card-subtitle>{{ pasoConfirmacion ? 'Ingresá el código de tu comunicador' : 'Nueva identidad en la galaxia' }}</ion-card-subtitle>
       </ion-card-header>
 
       <ion-card-content>
-        <div class="form-fields">
+        
+        <div class="form-fields" *ngIf="!pasoConfirmacion">
           <ion-item lines="none">
             <ion-input
               label="Email"
@@ -32,11 +33,25 @@
           </ion-item>
         </div>
 
+        <div class="form-fields" *ngIf="pasoConfirmacion">
+          <ion-item lines="none">
+            <ion-input
+              label="Código de Verificación"
+              labelPlacement="stacked"
+              type="text"
+              inputmode="numeric"
+              placeholder="Ingresá los 6 dígitos"
+              [(ngModel)]="codigo">
+            </ion-input>
+          </ion-item>
+        </div>
+
         <p class="error-text" *ngIf="errorMessage">
           {{ errorMessage }}
         </p>
 
         <ion-button
+          *ngIf="!pasoConfirmacion"
           expand="block"
           class="main-btn"
           (click)="register()"
@@ -45,12 +60,21 @@
         </ion-button>
 
         <ion-button
+          *ngIf="pasoConfirmacion"
+          expand="block"
+          class="main-btn"
+          (click)="confirmarCodigo()"
+          [disabled]="loading">
+          {{ loading ? 'Verificando...' : 'Confirmar identidad' }}
+        </ion-button>
+
+        <ion-button
           expand="block"
           fill="outline"
           class="secondary-btn"
           (click)="goBack()"
           [disabled]="loading">
-          Volver
+          {{ pasoConfirmacion ? 'Cancelar' : 'Volver' }}
         </ion-button>
 
         <div class="register-extra">
