@@ -1,0 +1,29 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 420" role="img" aria-labelledby="title desc">
+  <title id="title">Personajes Star Wars</title>
+  <desc id="desc">Tres siluetas de personajes frente a un hangar espacial.</desc>
+  <defs>
+    <linearGradient id="bg" x1="0" x2="1" y1="0" y2="1">
+      <stop offset="0" stop-color="#10172a"/>
+      <stop offset="0.55" stop-color="#351445"/>
+      <stop offset="1" stop-color="#0b1020"/>
+    </linearGradient>
+    <radialGradient id="glow" cx="50%" cy="40%" r="55%">
+      <stop offset="0" stop-color="#f9d56e" stop-opacity=".38"/>
+      <stop offset="1" stop-color="#f9d56e" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+  <rect width="640" height="420" fill="url(#bg)"/>
+  <circle cx="320" cy="172" r="190" fill="url(#glow)"/>
+  <path d="M40 350h560L520 225H120z" fill="#111827" opacity=".78"/>
+  <path d="M130 236h380M165 286h310M210 236l-42 114M430 236l42 114" stroke="#f43f5e" stroke-width="6" opacity=".38"/>
+  <circle cx="320" cy="128" r="54" fill="#f8fafc"/>
+  <path d="M248 325c9-91 36-138 72-138s63 47 72 138z" fill="#e2e8f0"/>
+  <circle cx="194" cy="168" r="40" fill="#94a3b8"/>
+  <path d="M142 326c8-74 28-113 52-113s44 39 52 113z" fill="#64748b"/>
+  <circle cx="446" cy="168" r="40" fill="#fbbf24"/>
+  <path d="M394 326c8-74 28-113 52-113s44 39 52 113z" fill="#b45309"/>
+  <path d="M83 88h78M486 86h72M88 123h38M506 124h78" stroke="#f8fafc" stroke-width="5" stroke-linecap="round" opacity=".58"/>
+  <circle cx="560" cy="63" r="3" fill="#fff"/>
+  <circle cx="91" cy="58" r="2" fill="#fff"/>
+  <circle cx="270" cy="48" r="2.5" fill="#fff"/>
+</svg>

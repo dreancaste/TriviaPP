@@ -25,7 +25,9 @@
       <div class="hero-content">
         <span class="entity-type">{{ item.categoria }}</span>
         <h1 class="hero-title">{{ item.nombre }}</h1>
-        <p class="hero-description">{{ item.descripcion }}</p>
+        <p class="hero-description" *ngIf="mostrarDescripcion()">
+          {{ item.descripcion }}
+        </p>
 
         <div class="hero-stats-col secciones-contenedor">
           <ion-list lines="none">
@@ -46,39 +48,6 @@
     </div>
 
     <ion-grid class="planet-content">
-      <ion-row>
-        <ion-col size="12" class="secciones-contenedor">
-          <h2 class="titulo-dorado">Galeria</h2>
-          <swiper-container
-            #swiper
-            slides-per-view="3"
-            [breakpoints]="{
-              '480':  { slidesPerView: 3 },
-              '768':  { slidesPerView: 4 },
-              '1024': { slidesPerView: 5 }
-            }"
-            space-between="12"
-            navigation="true"
-            grab-cursor="true"
-            (swiperslidechange)="onSlideChange($event)"
-          >
-            <swiper-slide *ngFor="let img of item.imagenes; let i = index">
-              <div
-                class="galeria-slide imagen-frame"
-                (click)="abrirImagen(i)"
-                [class.selected]="selectedIndex === i"
-              >
-                <img
-                  [src]="img"
-                  class="swiper-img"
-                  (error)="item.imagenes[i] = 'assets/icons/image.png'"
-                />
-              </div>
-            </swiper-slide>
-          </swiper-container>
-        </ion-col>
-      </ion-row>
-
       <ion-row class="datos-mapa-row" [class.sin-mapa]="!mapaImage">
         <ion-col size="12" [sizeMd]="mapaImage ? 5 : 12" class="secciones-contenedor">
           <h2 class="titulo-dorado">Datos Curiosos</h2>
@@ -108,7 +77,7 @@
         </ion-col>
       </ion-row>
 
-      <ion-row *ngIf="item.asociados.length">
+      <ion-row *ngIf="mostrarAsociados()">
         <ion-col size="12">
           <div class="secciones-contenedor">
             <h2 class="titulo-dorado">Asociado a</h2>

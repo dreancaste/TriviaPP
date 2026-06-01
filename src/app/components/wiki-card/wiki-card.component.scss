@@ -1,59 +1,40 @@
 .wiki-card {
-
+  height: 100%;
   background: rgba(15, 15, 30, 0.95);
-
   border: 1px solid rgba(255, 232, 31, 0.3);
-
-  border-radius: 20px;
-
+  border-radius: 14px;
   overflow: hidden;
-
   transition: 0.3s;
-
   box-shadow:
     0 0 12px rgba(255, 232, 31, 0.12);
-
   cursor: pointer;
 }
 
 .wiki-card:hover {
-
   transform: translateY(-4px);
-
   box-shadow:
     0 0 20px rgba(255, 232, 31, 0.35);
 }
 
 .card-image {
-
   width: 100%;
-
   height: 240px;
-
   object-fit: cover;
-
-  background: black;
+  background: #050816;
 }
 
 .card-title {
-
   color: #ffe81f;
-
   font-size: 1.2rem;
-
   font-weight: bold;
-
   margin-bottom: 8px;
 }
 
 .card-subtitle {
-
   color: #ccc;
-
   margin-bottom: 4px;
 }
 
 .card-extra {
-
-  color: #8ab4ff;
+  color: #f8fafc;
 }

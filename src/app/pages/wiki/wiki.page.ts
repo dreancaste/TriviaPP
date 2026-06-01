@@ -1,5 +1,6 @@
 import { Component } from "@angular/core";
 import { Router } from "@angular/router";
+import { WikiContentService } from "src/app/services/wiki-content.service";
 
 @Component({
   selector: "app-wiki",
@@ -7,18 +8,19 @@ import { Router } from "@angular/router";
   styleUrls: ["./wiki.page.scss"],
 })
 export class WikiPage {
+  readonly title = "Wiki Star Wars";
+  readonly description = "Explora personajes, peliculas y planetas del universo galactico";
 
-  constructor(private router: Router) {}
+  constructor(
+    private router: Router,
+    private wikiContent: WikiContentService
+  ) {}
 
-  goToCharacters() {
-    this.router.navigateByUrl("/wiki/characters");
+  get sections() {
+    return this.wikiContent.sections;
   }
 
-  goToFilms() {
-    this.router.navigateByUrl("/wiki/films");
-  }
-
-  goToPlanets() {
-    this.router.navigateByUrl("/wiki/planets");
+  goToSection(route: string) {
+    this.router.navigateByUrl(route);
   }
 }

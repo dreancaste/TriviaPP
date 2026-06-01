@@ -1,10 +1,9 @@
-import { Component, HostListener, OnInit, ViewChild } from "@angular/core";
+import { Component, HostListener, OnInit } from "@angular/core";
 import { Location } from "@angular/common";
 import { ActivatedRoute } from "@angular/router";
-import { register } from "swiper/element/bundle";
 import { SwapiService } from "src/app/services/swapi.service";
-
-register();
+import { WikiContentService } from "src/app/services/wiki-content.service";
+import { WikiEntityType } from "src/app/data/wiki-content";
 
 interface WikiStat {
   icon: string;
@@ -37,13 +36,10 @@ interface WikiDetail {
   styleUrls: ["./planet-detail.page.scss"],
 })
 export class PlanetDetailPage implements OnInit {
-  @ViewChild("swiper", { static: false }) swiperRef: any;
-
   detalle: WikiDetail | null = null;
   loading = true;
   error = "";
 
-  selectedIndex = 0;
   selectedAsociado = -1;
 
   heroImage = "";
@@ -52,7 +48,8 @@ export class PlanetDetailPage implements OnInit {
   constructor(
     private route: ActivatedRoute,
     private location: Location,
-    private swapiService: SwapiService
+    private swapiService: SwapiService,
+    private wikiContent: WikiContentService
   ) {}
 
   async ngOnInit() {
@@ -65,7 +62,7 @@ export class PlanetDetailPage implements OnInit {
   }
 
   private async loadDetail() {
-    const type = this.route.snapshot.paramMap.get("type") || "planets";
+    const type = (this.route.snapshot.paramMap.get("type") || "planets") as WikiEntityType;
     const id = this.route.snapshot.paramMap.get("id") || "1";
 
     try {
@@ -83,7 +80,6 @@ export class PlanetDetailPage implements OnInit {
         this.detalle = await this.buildPlanetDetail(planet, id);
       }
 
-      this.selectedIndex = 0;
       this.selectedAsociado = -1;
       this.updateResponsiveAssets();
     } catch {
@@ -94,139 +90,92 @@ export class PlanetDetailPage implements OnInit {
   }
 
   private async buildPlanetDetail(planet: any, id: string): Promise<WikiDetail> {
-    if (id === "1") {
-      return {
-        nombre: "Tatooine",
-        categoria: "Planeta",
-        descripcion:
-          "Tatooine es un planeta desertico, famoso por sus dos soles y su clima arido. Dominado por clanes criminales como los Hutts y habitado por especies nativas como los Jawas y los Tusken Raiders.",
-        imagen: "assets/icons/tatooine.jpg",
-        imagenes: [
-          "assets/icons/tatooine.jpg",
-          "assets/icons/tatooine2.jpg",
-          "assets/icons/tatooine3.jpg",
-          "assets/icons/tatooine4.jpg",
-          "assets/icons/tatooine5.jpg",
-          "assets/icons/tatooine6.jpg",
-          "assets/icons/tatooine7.jpg",
-        ],
-        stats: [
-          { icon: "assets/icons/terreno.png", label: "Terreno", value: "Desierto" },
-          { icon: "assets/icons/clima.png", label: "Clima", value: "Arido" },
-          { icon: "assets/icons/poblacion.png", label: "Poblacion", value: "200.000" },
-          { icon: "assets/icons/gravedad.png", label: "Gravedad", value: "1 standard" },
-          { icon: "assets/icons/orbita.png", label: "Orbita", value: "1.5 AU" },
-        ],
-        datosCuriosos: [
-          "Tatooine posee dos soles, generando temperaturas extremas.",
-          "Luke Skywalker crecio en una granja de humedad en este planeta.",
-          "Mos Eisley es conocido como uno de los puertos espaciales mas peligrosos.",
-          "Los Jawas recorren el desierto recolectando tecnologia abandonada.",
-          "Las tormentas de arena pueden cubrir estructuras enteras.",
-        ],
-        asociados: [
-          {
-            tipo: "PERSONAJE",
-            nombre: "Luke Skywalker",
-            imagen: "assets/icons/lukeSkywalker.png",
-          },
-          {
-            tipo: "VEHICULO",
-            nombre: "X-34 Landspeeder",
-            imagen: "assets/icons/X-34Landspeeder.png",
-          },
-          {
-            tipo: "ORGANIZACION",
-            nombre: "Jabba The Hutt",
-            imagen: "assets/icons/jabbathehutt.png",
-          },
-          {
-            tipo: "EVENTO",
-            nombre: "Batalla de Mos Eisley",
-            imagen: "assets/icons/mosEisley.jpg",
-          },
-        ],
-        mapa: "assets/icons/MapaTatooine.png",
-        mapaMovil: "assets/icons/MapaTatooineMovil.png",
-      };
-    }
-
-    const image = this.getVisualGuideImage("planets", id);
+    const image = this.wikiContent.getVisualGuideImage("planets", id);
+    const map = this.wikiContent.getMap("planets", id);
+    const [climate, terrain, population, gravity, orbit] = await this.wikiContent.translateValues([
+      planet.climate,
+      planet.terrain,
+      planet.population,
+      planet.gravity,
+      planet.orbital_period,
+    ]);
 
     return {
       nombre: planet.name,
       categoria: "Planeta",
-      descripcion: `${planet.name} es un planeta de clima ${planet.climate} y terreno ${planet.terrain}. Su poblacion registrada es ${planet.population}.`,
+      descripcion: `${planet.name} es un planeta de clima ${climate} y terreno ${terrain}. Su poblacion registrada es ${population}.`,
       imagen: image,
-      imagenes: [image],
+      imagenes: this.wikiContent.getImages("planets", id, image),
       stats: [
-        { icon: "assets/icons/terreno.png", label: "Terreno", value: planet.terrain },
-        { icon: "assets/icons/clima.png", label: "Clima", value: planet.climate },
-        { icon: "assets/icons/poblacion.png", label: "Poblacion", value: planet.population },
-        { icon: "assets/icons/gravedad.png", label: "Gravedad", value: planet.gravity },
-        { icon: "assets/icons/orbita.png", label: "Orbita", value: `${planet.orbital_period} dias` },
+        { icon: this.wikiContent.getStatIcon("terrain"), label: "Terreno", value: terrain },
+        { icon: this.wikiContent.getStatIcon("climate"), label: "Clima", value: climate },
+        { icon: this.wikiContent.getStatIcon("population"), label: "Poblacion", value: population },
+        { icon: this.wikiContent.getStatIcon("gravity"), label: "Gravedad", value: gravity },
+        { icon: this.wikiContent.getStatIcon("orbit"), label: "Orbita", value: `${orbit} dias` },
       ],
-      datosCuriosos: [
-        `Periodo de rotacion: ${planet.rotation_period} horas.`,
-        `Diametro: ${planet.diameter} kilometros.`,
-        `Superficie de agua: ${planet.surface_water}%.`,
-      ],
+      datosCuriosos: await this.wikiContent.getCuriosities("planets", id, planet),
       asociados: await this.getAssociated(planet.residents, "PERSONAJE"),
+      mapa: map.map,
+      mapaMovil: map.mobileMap,
     };
   }
 
   private async buildCharacterDetail(character: any, id: string): Promise<WikiDetail> {
-    const image = this.getVisualGuideImage("characters", id);
+    const image = this.wikiContent.getVisualGuideImage("characters", id);
+    const [height, mass, birthYear, gender, eyeColor] = await this.wikiContent.translateValues([
+      character.height,
+      character.mass,
+      character.birth_year,
+      character.gender,
+      character.eye_color,
+    ]);
 
     return {
       nombre: character.name,
       categoria: "Personaje",
       descripcion: `${character.name} forma parte del universo Star Wars. Su ficha registra datos fisicos, origen y apariciones conectadas con otros elementos de la saga.`,
       imagen: image,
-      imagenes: [image],
+      imagenes: this.wikiContent.getImages("characters", id, image),
       stats: [
-        { icon: "assets/icons/gravedad.png", label: "Altura", value: `${character.height} cm` },
-        { icon: "assets/icons/poblacion.png", label: "Masa", value: `${character.mass} kg` },
-        { icon: "assets/icons/clima.png", label: "Nacimiento", value: character.birth_year },
-        { icon: "assets/icons/terreno.png", label: "Genero", value: character.gender },
-        { icon: "assets/icons/orbita.png", label: "Ojos", value: character.eye_color },
+        { icon: this.wikiContent.getStatIcon("height"), label: "Altura", value: `${height} cm` },
+        { icon: this.wikiContent.getStatIcon("mass"), label: "Peso", value: `${mass} kg` },
+        { icon: this.wikiContent.getStatIcon("climate"), label: "Nacimiento", value: birthYear },
+        { icon: this.wikiContent.getStatIcon("gender"), label: "Genero", value: gender },
+        { icon: this.wikiContent.getStatIcon("eyes"), label: "Ojos", value: eyeColor },
       ],
-      datosCuriosos: [
-        `Color de cabello: ${character.hair_color}.`,
-        `Color de piel: ${character.skin_color}.`,
-        `Aparece en ${character.films?.length || 0} pelicula(s).`,
-        `Tiene relacion con ${character.vehicles?.length || 0} vehiculo(s) y ${character.starships?.length || 0} nave(s).`,
-      ],
-      asociados: await this.getAssociated(
-        [character.homeworld, ...(character.films || [])],
-        "REFERENCIA"
-      ),
+      datosCuriosos: await this.wikiContent.getCuriosities("characters", id, character),
+      asociados: [],
     };
   }
 
   private async buildFilmDetail(film: any): Promise<WikiDetail> {
-    const image = this.getVisualGuideImage("films", film.episode_id);
-    const crawlLines = String(film.opening_crawl || "")
-      .split(/\r?\n/)
-      .map((line) => line.trim())
-      .filter(Boolean)
-      .slice(0, 4);
+    const id = this.getIdFromUrl(film.url);
+    const image = this.wikiContent.getVisualGuideImage("films", film.episode_id);
+    const description = await this.wikiContent.translateParagraph(film.opening_crawl);
 
     return {
       nombre: film.title,
       categoria: "Pelicula",
-      descripcion: film.opening_crawl,
+      descripcion: description,
       imagen: image,
-      imagenes: [image],
+      imagenes: this.wikiContent.getImages("films", id, image),
       stats: [
-        { icon: "assets/icons/orbita.png", label: "Episodio", value: String(film.episode_id) },
-        { icon: "assets/icons/gobierno.png", label: "Director", value: film.director },
-        { icon: "assets/icons/poblacion.png", label: "Productor", value: film.producer },
-        { icon: "assets/icons/clima.png", label: "Estreno", value: film.release_date },
+        { icon: this.wikiContent.getStatIcon("orbit"), label: "Episodio", value: String(film.episode_id) },
+        { icon: this.wikiContent.getStatIcon("director"), label: "Director", value: this.wikiContent.valueOrUnknown(film.director) },
+        { icon: this.wikiContent.getStatIcon("producer"), label: "Productor", value: this.wikiContent.valueOrUnknown(film.producer) },
+        { icon: this.wikiContent.getStatIcon("climate"), label: "Estreno", value: this.wikiContent.valueOrUnknown(film.release_date) },
       ],
-      datosCuriosos: crawlLines.length ? crawlLines : ["Sin sinopsis disponible."],
-      asociados: await this.getAssociated(film.characters, "PERSONAJE"),
+      datosCuriosos: await this.wikiContent.getCuriosities("films", id, film),
+      asociados: [],
     };
+  }
+
+  mostrarDescripcion(): boolean {
+    return this.detalle?.categoria !== "Planeta" && Boolean(this.detalle?.descripcion);
+  }
+
+  mostrarAsociados(): boolean {
+    return this.detalle?.categoria === "Planeta" && Boolean(this.detalle?.asociados.length);
   }
 
   private async getAssociated(
@@ -242,7 +191,7 @@ export class PlanetDetailPage implements OnInit {
         return {
           tipo: this.getAssociatedType(url, fallbackType),
           nombre: data.name || data.title || "Referencia",
-          imagen: this.getVisualGuideImage(this.getVisualGuideType(url), id),
+          imagen: this.wikiContent.getVisualGuideImage(this.getVisualGuideType(url), id),
         };
       })
     );
@@ -266,7 +215,7 @@ export class PlanetDetailPage implements OnInit {
     return fallbackType;
   }
 
-  private getVisualGuideType(url: string): string {
+  private getVisualGuideType(url: string): WikiEntityType {
     if (url.includes("/people/")) {
       return "characters";
     }
@@ -280,10 +229,6 @@ export class PlanetDetailPage implements OnInit {
 
   private getIdFromUrl(url: string): string {
     return url.split("/").filter(Boolean).pop() || "1";
-  }
-
-  private getVisualGuideImage(type: string, id: string | number): string {
-    return `https://starwars-visualguide.com/assets/img/${type}/${id}.jpg`;
   }
 
   private isMobile(): boolean {
@@ -317,32 +262,6 @@ export class PlanetDetailPage implements OnInit {
 
   volverAtras() {
     this.location.back();
-  }
-
-  abrirImagen(index: number) {
-    if (!this.detalle) {
-      return;
-    }
-
-    this.selectedIndex = index;
-    const selectedImage = this.detalle.imagenes[index];
-    this.heroImage = this.getResponsiveHeroImage(selectedImage);
-
-    if (this.swiperRef?.swiper) {
-      this.swiperRef.swiper.slideTo(index);
-    }
-  }
-
-  onSlideChange(event: any) {
-    if (!this.detalle) {
-      return;
-    }
-
-    const swiper = event.detail[0];
-    this.selectedIndex = swiper.activeIndex;
-
-    const selectedImage = this.detalle.imagenes[swiper.activeIndex];
-    this.heroImage = this.getResponsiveHeroImage(selectedImage);
   }
 
   seleccionarAsociado(index: number) {

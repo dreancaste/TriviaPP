@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { SwapiService } from 'src/app/services/swapi.service';
+import { WikiContentService } from 'src/app/services/wiki-content.service';
 
 @Component({
   selector: 'app-films',
@@ -13,8 +14,13 @@ export class FilmsPage implements OnInit {
 
   constructor(
     private router: Router,
-    private swapiService: SwapiService
+    private swapiService: SwapiService,
+    private wikiContent: WikiContentService
   ) {}
+
+  get section() {
+    return this.wikiContent.getSection("films");
+  }
 
   async ngOnInit() {
     const response = await this.swapiService.getFilms();
@@ -23,7 +29,7 @@ export class FilmsPage implements OnInit {
   }
 
   getImage(film: any): string {
-    return `https://starwars-visualguide.com/assets/img/films/${film.episode_id}.jpg`;
+    return this.wikiContent.getVisualGuideImage("films", film.episode_id);
   }
 
   getId(url: string): string {
