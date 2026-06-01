@@ -1,6 +1,6 @@
 import { Component, OnInit } from "@angular/core";
 import { Router } from "@angular/router";
-import { Haptics, ImpactStyle } from "@capacitor/haptics";
+import { Haptics } from "@capacitor/haptics";
 import { TriviaService } from "../../services/trivia.service";
 import { StorageService } from "../../services/storage.service";
 import { TriviaQuestion } from "../../models/trivia-question.model";
@@ -65,7 +65,7 @@ export class TriviaPage implements OnInit {
 
       const profile = this.storageService.getProfile();
       if (profile.vibrateOnError) {
-        await Haptics.impact({ style: ImpactStyle.Heavy });
+        await Haptics.vibrate({ duration: 300 });
       }
     }
   }
