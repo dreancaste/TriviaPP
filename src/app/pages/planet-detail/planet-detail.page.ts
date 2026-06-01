@@ -150,7 +150,8 @@ export class PlanetDetailPage implements OnInit {
 
   private async buildFilmDetail(film: any): Promise<WikiDetail> {
     const id = this.getIdFromUrl(film.url);
-    const image = this.wikiContent.getVisualGuideImage("films", film.episode_id);
+    const episodeId = String(film.episode_id);
+    const image = this.wikiContent.getVisualGuideImage("films", episodeId);
     const description = await this.wikiContent.translateParagraph(film.opening_crawl);
 
     return {
@@ -158,7 +159,7 @@ export class PlanetDetailPage implements OnInit {
       categoria: "Pelicula",
       descripcion: description,
       imagen: image,
-      imagenes: this.wikiContent.getImages("films", id, image),
+      imagenes: this.wikiContent.getImages("films", episodeId, image),
       stats: [
         { icon: this.wikiContent.getStatIcon("orbit"), label: "Episodio", value: String(film.episode_id) },
         { icon: this.wikiContent.getStatIcon("director"), label: "Director", value: this.wikiContent.valueOrUnknown(film.director) },

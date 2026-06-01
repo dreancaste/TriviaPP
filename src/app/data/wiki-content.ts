@@ -9,6 +9,7 @@ export interface WikiSectionConfig {
 }
 
 export interface WikiAssetConfig {
+  image?: string;
   images?: string[];
   map?: string;
   mobileMap?: string;
@@ -39,8 +40,43 @@ export const WIKI_SECTIONS: WikiSectionConfig[] = [
 ];
 
 export const WIKI_ASSETS: Partial<Record<WikiEntityType, Record<string, WikiAssetConfig>>> = {
+  characters: {
+    "1": { image: "https://static.wikia.nocookie.net/starwars/images/3/3d/LukeSkywalker.png/revision/latest/scale-to-width-down/1000?cb=20241221010122" }, // Luke Skywalker
+    "2": { image: "https://static.wikia.nocookie.net/starwars/images/a/a2/C-3PO-TROSTGG.png/revision/latest/scale-to-width-down/1000?cb=20230706042830" }, // C-3PO
+    "3": { image: "https://static.wikia.nocookie.net/starwars/images/9/95/R2-D2-TROSOCE.png/revision/latest/scale-to-width-down/1000?cb=20240104043013" }, // R2-D2
+    "4": { image: "https://static.wikia.nocookie.net/starwars/images/0/0a/Battlefront_Vader.jpg/revision/latest/scale-to-width-down/1000?cb=20181211045721" }, // Darth Vader
+    "5": { image: "https://static.wikia.nocookie.net/starwars/images/9/9b/Princessleiaheadwithgun.jpg/revision/latest/scale-to-width-down/1000?cb=20240522043127" }, // Leia Organa
+    "6": { image: "https://static.wikia.nocookie.net/starwars/images/e/eb/OwenCardTrader.png/revision/latest?cb=20241208055940" }, // Owen Lars
+    "7": { image: "https://static.wikia.nocookie.net/starwars/images/7/76/Beru_headshot2.jpg/revision/latest?cb=20111029215429" }, // Beru Whitesun lars
+    "8": { image: "https://static.wikia.nocookie.net/starwars/images/3/3f/R5D4-AG.png/revision/latest?cb=20260117204314" }, // R5-D4
+    "9": { image: "https://static.wikia.nocookie.net/starwars/images/0/00/BiggsHS-ANH.png/revision/latest?cb=20130305010406" }, // Biggs Darklighter
+    "10": { image: "https://static.wikia.nocookie.net/starwars/images/3/3b/ObiWanKenobi9BBY-CGSWG.png/revision/latest?cb=20250501235341" }, // Obi-Wan Kenobi
+    "21": {image: "https://static.wikia.nocookie.net/starwars/images/d/d8/Emperor_Sidious.png/revision/latest/scale-to-width-down/1000?cb=20250408053451"}, // Palpatine
+    "35": { image: "https://static.wikia.nocookie.net/starwars/images/b/b2/Padmegreenscrshot.jpg/revision/latest?cb=20100423143631"}, // Padme
+    "36": { image: "https://static.wikia.nocookie.net/starwars/images/e/ed/Binks22BBY.png/revision/latest?cb=20241220222900"}, // Jar jar binks
+    "68": { image: "https://static.wikia.nocookie.net/starwars/images/b/b0/Bailrogueone.jpg/revision/latest?cb=20241219201015"}, // Bail Organa
+    "81": { image: "https://static.wikia.nocookie.net/starwars/images/8/80/Raymus_card_trader.png/revision/latest?cb=20251107052511"}, // Raimus Antilles
+    "22": { image: "https://static.wikia.nocookie.net/starwars/images/4/46/BobaFett-SWI206.png/revision/latest/scale-to-width-down/1000?cb=20250317160030"}, // Boba Fett
+    "72": { image: "https://static.wikia.nocookie.net/starwars/images/7/73/Lama_Su.jpg/revision/latest?cb=20080117165735"}, // Lama Su
+    "73": { image: "https://static.wikia.nocookie.net/starwars/images/9/9c/TaunWe.jpg/revision/latest?cb=20080117164920"}, // Taun We
+    "34": { image: "https://static.wikia.nocookie.net/starwars/images/5/51/ValorumPortrait-SWE.png/revision/latest?cb=20220910225030"}, // Finis Valorum
+    "55": { image: "https://static.wikia.nocookie.net/starwars/images/f/f2/AdiGallia2-SWE.png/revision/latest?cb=20240922163922"}, // Adi Galia
+    "74": { image: "https://static.wikia.nocookie.net/starwars/images/1/17/JocastaNu-Db.png/revision/latest?cb=20230812014243"}, // Jocasta Nu
+    "30": { image: "https://static.wikia.nocookie.net/starwars/images/a/aa/Wicket-2024Base.png/revision/latest?cb=20251026210916"}, // Wicket
+    "26": { image: "https://static.wikia.nocookie.net/starwars/images/7/72/Lobot-SWE.png/revision/latest?cb=20211214014446"}, // Lobot
+  },
+  films: {
+    "1": { image: "https://static.wikia.nocookie.net/starwars/images/7/75/EPI_TPM_poster.png/revision/latest/scale-to-width-down/1000?cb=20250617214241" }, // The Phantom Menace
+    "2": { image: "https://static.wikia.nocookie.net/starwars/images/d/dd/Attack-Clones-Poster.jpg/revision/latest/scale-to-width-down/1000?cb=20250617225730" }, // Attack of the Clones
+    "3": { image: "https://static.wikia.nocookie.net/starwars/images/e/e7/EPIII_RotS_poster.png/revision/latest/scale-to-width-down/1000?cb=20250617231154" }, // Revenge of the Sith
+    "4": { image: "https://static.wikia.nocookie.net/starwars/images/4/44/1977-StarWars-theatricalposter.jpg/revision/latest/scale-to-width-down/1000?cb=20260130123909" }, // A New Hope
+    "5": { image: "https://static.wikia.nocookie.net/starwars/images/e/e8/1980-EmpireStrikesBack-theatricalposter.jpg/revision/latest?cb=20260130125325" }, // The Empire Strikes Back
+    "6": { image: "https://static.wikia.nocookie.net/starwars/images/b/b2/ReturnOfTheJediPoster1983.jpg/revision/latest?cb=20250617080341" }, // Return of the Jedi
+    "7": { image: "https://static.wikia.nocookie.net/starwars/images/f/fd/Star_Wars_Episode_VII_The_Force_Awakens.jpg/revision/latest/scale-to-width-down/1000?cb=20250618012820"}
+  },
   planets: {
     "1": {
+      image: "https://static.wikia.nocookie.net/starwars/images/b/b0/Tatooine_TPM.png/revision/latest?cb=20241209041104",
       images: [
         "assets/icons/tatooine.jpg",
         "assets/icons/tatooine2.jpg",
@@ -53,6 +89,15 @@ export const WIKI_ASSETS: Partial<Record<WikiEntityType, Record<string, WikiAsse
       map: "assets/icons/MapaTatooine.png",
       mobileMap: "assets/icons/MapaTatooineMovil.png",
     },
+    "2": { image: "https://static.wikia.nocookie.net/starwars/images/4/4a/Alderaan.jpg/revision/latest?cb=20061211013805" }, // Alderaan
+    "3": { image: "https://static.wikia.nocookie.net/starwars/images/a/a0/Eaw_Yavin4.jpg/revision/latest?cb=20060418114439" }, // Yavin IV
+    "4": { image: "https://static.wikia.nocookie.net/starwars/images/8/81/Hoth_AoRCR.png/revision/latest?cb=20170222025915" }, // Hoth
+    "5": { image: "https://static.wikia.nocookie.net/starwars/images/7/7d/Dagobah-CGSWG.png/revision/latest/scale-to-width-down/1000?cb=20241208214847" }, // Dagobah
+    "6": { image: "https://static.wikia.nocookie.net/starwars/images/1/11/Bespin-SWCT.png/revision/latest?cb=20181010054421" }, // Bespin
+    "7": { image: "https://static.wikia.nocookie.net/starwars/images/1/1d/Endor_BF2.png/revision/latest?cb=20171014232605" }, // Endor
+    "8": { image: "https://static.wikia.nocookie.net/starwars/images/f/f0/Naboo_planet.png/revision/latest?cb=20251122020213" }, // Naboo
+    "9": { image: "https://static.wikia.nocookie.net/starwars/images/8/84/CoruscantGlobeE1.png/revision/latest?cb=20240513175137" }, // Coruscant
+    "10": { image: "https://static.wikia.nocookie.net/starwars/images/a/a9/Eaw_Kamino.jpg/revision/latest?cb=20090527045541" }, // Kamino
   },
 };
 

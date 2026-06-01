@@ -13,6 +13,7 @@ import { TranslationService } from "./translation.service";
 })
 export class WikiContentService {
   readonly sections = WIKI_SECTIONS;
+  private readonly placeholderImage = "assets/icons/image.png";
   private translationCache = new Map<string, Promise<string>>();
 
   constructor(private translationService: TranslationService) {}
@@ -22,11 +23,25 @@ export class WikiContentService {
   }
 
   getVisualGuideImage(type: WikiEntityType, id: string | number): string {
-    return `https://starwars-visualguide.com/assets/img/${type}/${id}.jpg`;
+    const assets = WIKI_ASSETS[type]?.[String(id)];
+    const manualImage = assets?.image || assets?.images?.find(Boolean);
+
+    return manualImage || this.placeholderImage;
   }
 
   getImages(type: WikiEntityType, id: string, fallbackImage: string): string[] {
-    return WIKI_ASSETS[type]?.[id]?.images || [fallbackImage];
+    const assets = WIKI_ASSETS[type]?.[id];
+    const manualImages = assets?.images?.filter(Boolean);
+
+    if (manualImages?.length) {
+      return manualImages;
+    }
+
+    if (assets?.image) {
+      return [assets.image];
+    }
+
+    return [fallbackImage || this.placeholderImage];
   }
 
   getMap(type: WikiEntityType, id: string) {
