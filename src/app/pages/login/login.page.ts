@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
 
@@ -7,7 +7,7 @@ import { AuthService } from '../../services/auth.service';
   templateUrl: './login.page.html',
   styleUrls: ['./login.page.scss']
 })
-export class LoginPage {
+export class LoginPage implements OnInit {
   email = '';
   password = '';
   errorMessage = '';
@@ -17,6 +17,15 @@ export class LoginPage {
     private authService: AuthService,
     private router: Router
   ) {}
+    // Al iniciar la página, se verifica si ya hay una sesión activa. Si es así, se redirige al menú/home.
+    async ngOnInit() {
+    // Verificar si ya hay sesión activa
+    const user = await this.authService.getCurrentUser();
+    if (user) {
+      // Si hay sesión → redirigir al menú/home
+      this.router.navigateByUrl('/home', { replaceUrl: true });
+    }
+  }
   
   // Login, requiere email y contrasenia correcta.
 
