@@ -1,5 +1,4 @@
 <ion-card class="wiki-card">
-
   <img
     [src]="image"
     class="card-image"
@@ -7,25 +6,16 @@
   />
 
   <ion-card-content>
-
     <h2 class="card-title">
       {{ title }}
     </h2>
 
-    <p
-      class="card-subtitle"
-      *ngIf="subtitle"
-    >
+    <p class="card-subtitle" *ngIf="subtitle">
       {{ subtitle }}
     </p>
 
-    <p
-      class="card-extra"
-      *ngIf="extra"
-    >
+    <p class="card-extra" *ngIf="extra">
       {{ extra }}
     </p>
-
   </ion-card-content>
-
 </ion-card>

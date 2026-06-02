@@ -53,7 +53,11 @@ export class WikiContentService {
     };
   }
 
-  async getCuriosities(type: WikiEntityType, id: string, entity: any): Promise<string[]> {
+  async getCuriosities(
+    type: WikiEntityType,
+    id: string,
+    entity: any,
+  ): Promise<string[]> {
     const appCuriosities = WIKI_CURIOSITIES[type]?.[id];
 
     if (appCuriosities?.length) {
@@ -75,7 +79,8 @@ export class WikiContentService {
     }
 
     if (type === "films") {
-      const releaseYear = String(entity.release_date || "").slice(0, 4) || "desconocido";
+      const releaseYear =
+        String(entity.release_date || "").slice(0, 4) || "desconocido";
 
       return [
         `${entity.title} corresponde al Episodio ${entity.episode_id} de la saga.`,
@@ -104,7 +109,10 @@ export class WikiContentService {
   async translateValue(value: any): Promise<string> {
     const normalized = this.valueOrUnknown(value);
 
-    if (normalized === "desconocido" || this.isLikelyNonTranslatable(normalized)) {
+    if (
+      normalized === "desconocido" ||
+      this.isLikelyNonTranslatable(normalized)
+    ) {
       return normalized;
     }
 
@@ -129,7 +137,9 @@ export class WikiContentService {
     if (!this.translationCache.has(key)) {
       this.translationCache.set(
         key,
-        raw ? this.translationService.translateRaw(text) : this.translationService.translate(text)
+        raw
+          ? this.translationService.translateRaw(text)
+          : this.translationService.translate(text),
       );
     }
 
