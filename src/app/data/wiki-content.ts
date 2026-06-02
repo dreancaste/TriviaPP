@@ -86,18 +86,63 @@ export const WIKI_ASSETS: Partial<Record<WikiEntityType, Record<string, WikiAsse
         "assets/icons/tatooine6.jpg",
         "assets/icons/tatooine7.jpg",
       ],
+    
       map: "assets/icons/MapaTatooine.png",
       mobileMap: "assets/icons/MapaTatooineMovil.png",
     },
-    "2": { image: "https://static.wikia.nocookie.net/starwars/images/4/4a/Alderaan.jpg/revision/latest?cb=20061211013805" }, // Alderaan
-    "3": { image: "https://static.wikia.nocookie.net/starwars/images/a/a0/Eaw_Yavin4.jpg/revision/latest?cb=20060418114439" }, // Yavin IV
-    "4": { image: "https://static.wikia.nocookie.net/starwars/images/8/81/Hoth_AoRCR.png/revision/latest?cb=20170222025915" }, // Hoth
-    "5": { image: "https://static.wikia.nocookie.net/starwars/images/7/7d/Dagobah-CGSWG.png/revision/latest/scale-to-width-down/1000?cb=20241208214847" }, // Dagobah
-    "6": { image: "https://static.wikia.nocookie.net/starwars/images/1/11/Bespin-SWCT.png/revision/latest?cb=20181010054421" }, // Bespin
-    "7": { image: "https://static.wikia.nocookie.net/starwars/images/1/1d/Endor_BF2.png/revision/latest?cb=20171014232605" }, // Endor
-    "8": { image: "https://static.wikia.nocookie.net/starwars/images/f/f0/Naboo_planet.png/revision/latest?cb=20251122020213" }, // Naboo
-    "9": { image: "https://static.wikia.nocookie.net/starwars/images/8/84/CoruscantGlobeE1.png/revision/latest?cb=20240513175137" }, // Coruscant
-    "10": { image: "https://static.wikia.nocookie.net/starwars/images/a/a9/Eaw_Kamino.jpg/revision/latest?cb=20090527045541" }, // Kamino
+      "2": {
+        image: "https://static.wikia.nocookie.net/starwars/images/4/4a/Alderaan.jpg/revision/latest?cb=20061211013805",
+        map: "assets/icons/MapaAlderaanMovil.png",
+        mobileMap: "assets/icons/MapaAlderaanMovil.png",
+    }, // Alderaan
+
+      "3": {
+        image: "https://static.wikia.nocookie.net/starwars/images/a/a0/Eaw_Yavin4.jpg/revision/latest?cb=20060418114439",
+        map: "assets/icons/MapaYavinIvMovil.png",
+        mobileMap: "assets/icons/MapaYavinIvMovil.png",
+    }, // Yavin IV
+
+      "4": {
+        image: "https://static.wikia.nocookie.net/starwars/images/8/81/Hoth_AoRCR.png/revision/latest?cb=20170222025915",
+        map: "assets/icons/MapaHothMovil.png",
+        mobileMap: "assets/icons/MapaHothMovil.png",
+    }, // Hoth
+
+      "5": {
+        image: "https://static.wikia.nocookie.net/starwars/images/7/7d/Dagobah-CGSWG.png/revision/latest/scale-to-width-down/1000?cb=20241208214847",
+        map: "assets/icons/MapaDagobahMovil.png",
+        mobileMap: "assets/icons/MapaDagobahMovil.png",
+    }, // Dagobah
+
+      "6": {
+        image: "https://static.wikia.nocookie.net/starwars/images/1/11/Bespin-SWCT.png/revision/latest?cb=20181010054421",
+        map: "assets/icons/MapaBespinMovil.png",
+        mobileMap: "assets/icons/MapaBespinMovil.png",
+    }, // Bespin
+
+      "7": {
+        image: "https://static.wikia.nocookie.net/starwars/images/1/1d/Endor_BF2.png/revision/latest?cb=20171014232605",
+        map: "assets/icons/MapaEndorMovil.png",
+        mobileMap: "assets/icons/MapaEndorMovil.png",
+    }, // Endor
+
+        "8": {
+          image: "https://static.wikia.nocookie.net/starwars/images/f/f0/Naboo_planet.png/revision/latest?cb=20251122020213",
+          map: "assets/icons/MapaNabooMovil.png",
+          mobileMap: "assets/icons/MapaNabooMovil.png",
+    }, // Naboo
+
+        "9": {
+          image: "https://static.wikia.nocookie.net/starwars/images/8/84/CoruscantGlobeE1.png/revision/latest?cb=20240513175137",
+          map: "assets/icons/MapaCoruscantMovil.png",
+          mobileMap: "assets/icons/MapaCoruscantMovil.png",
+    }, // Coruscant
+
+        "10": {
+          image: "https://static.wikia.nocookie.net/starwars/images/a/a9/Eaw_Kamino.jpg/revision/latest?cb=20090527045541",
+          map: "assets/icons/MapaKamino.png",
+          mobileMap: "assets/icons/MapaKaminoMovil.png",
+    }, // Kamino
   },
 };
 
