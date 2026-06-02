@@ -159,14 +159,17 @@ export const WIKI_CURIOSITIES: Partial<Record<WikiEntityType, Record<string, str
 
 export const WIKI_STAT_ICONS = {
   climate: "assets/icons/clima.png",
-  director: "assets/icons/gobierno.png",
-  eyes: "assets/icons/orbita.png",
-  gender: "assets/icons/terreno.png",
+  director: "assets/icons/director.png",
+  eyes: "assets/icons/eye.png",
+  gender: "assets/icons/gender.png",
   gravity: "assets/icons/gravedad.png",
-  height: "assets/icons/gravedad.png",
-  mass: "assets/icons/poblacion.png",
+  height: "assets/icons/height.png",
+  mass: "assets/icons/weight.png",
   orbit: "assets/icons/orbita.png",
   population: "assets/icons/poblacion.png",
-  producer: "assets/icons/poblacion.png",
+  producer: "assets/icons/producer.png",
   terrain: "assets/icons/terreno.png",
+  date: "assets/icons/date.png",
+  episode: "assets/icons/episode.png",
+  birth: "assets/icons/birth.png",
 };

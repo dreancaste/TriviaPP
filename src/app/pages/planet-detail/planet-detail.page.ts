@@ -49,7 +49,7 @@ export class PlanetDetailPage implements OnInit {
     private route: ActivatedRoute,
     private location: Location,
     private swapiService: SwapiService,
-    private wikiContent: WikiContentService
+    private wikiContent: WikiContentService,
   ) {}
 
   async ngOnInit() {
@@ -62,7 +62,8 @@ export class PlanetDetailPage implements OnInit {
   }
 
   private async loadDetail() {
-    const type = (this.route.snapshot.paramMap.get("type") || "planets") as WikiEntityType;
+    const type = (this.route.snapshot.paramMap.get("type") ||
+      "planets") as WikiEntityType;
     const id = this.route.snapshot.paramMap.get("id") || "1";
 
     try {
@@ -89,16 +90,20 @@ export class PlanetDetailPage implements OnInit {
     }
   }
 
-  private async buildPlanetDetail(planet: any, id: string): Promise<WikiDetail> {
+  private async buildPlanetDetail(
+    planet: any,
+    id: string,
+  ): Promise<WikiDetail> {
     const image = this.wikiContent.getVisualGuideImage("planets", id);
     const map = this.wikiContent.getMap("planets", id);
-    const [climate, terrain, population, gravity, orbit] = await this.wikiContent.translateValues([
-      planet.climate,
-      planet.terrain,
-      planet.population,
-      planet.gravity,
-      planet.orbital_period,
-    ]);
+    const [climate, terrain, population, gravity, orbit] =
+      await this.wikiContent.translateValues([
+        planet.climate,
+        planet.terrain,
+        planet.population,
+        planet.gravity,
+        planet.orbital_period,
+      ]);
 
     return {
       nombre: planet.name,
@@ -107,28 +112,56 @@ export class PlanetDetailPage implements OnInit {
       imagen: image,
       imagenes: this.wikiContent.getImages("planets", id, image),
       stats: [
-        { icon: this.wikiContent.getStatIcon("terrain"), label: "Terreno", value: terrain },
-        { icon: this.wikiContent.getStatIcon("climate"), label: "Clima", value: climate },
-        { icon: this.wikiContent.getStatIcon("population"), label: "Poblacion", value: population },
-        { icon: this.wikiContent.getStatIcon("gravity"), label: "Gravedad", value: gravity },
-        { icon: this.wikiContent.getStatIcon("orbit"), label: "Orbita", value: `${orbit} dias` },
+        {
+          icon: this.wikiContent.getStatIcon("terrain"),
+          label: "Terreno",
+          value: terrain,
+        },
+        {
+          icon: this.wikiContent.getStatIcon("climate"),
+          label: "Clima",
+          value: climate,
+        },
+        {
+          icon: this.wikiContent.getStatIcon("population"),
+          label: "Poblacion",
+          value: population,
+        },
+        {
+          icon: this.wikiContent.getStatIcon("gravity"),
+          label: "Gravedad",
+          value: gravity,
+        },
+        {
+          icon: this.wikiContent.getStatIcon("orbit"),
+          label: "Orbita",
+          value: `${orbit} dias`,
+        },
       ],
-      datosCuriosos: await this.wikiContent.getCuriosities("planets", id, planet),
+      datosCuriosos: await this.wikiContent.getCuriosities(
+        "planets",
+        id,
+        planet,
+      ),
       asociados: await this.getAssociated(planet.residents, "PERSONAJE"),
       mapa: map.map,
       mapaMovil: map.mobileMap,
     };
   }
 
-  private async buildCharacterDetail(character: any, id: string): Promise<WikiDetail> {
+  private async buildCharacterDetail(
+    character: any,
+    id: string,
+  ): Promise<WikiDetail> {
     const image = this.wikiContent.getVisualGuideImage("characters", id);
-    const [height, mass, birthYear, gender, eyeColor] = await this.wikiContent.translateValues([
-      character.height,
-      character.mass,
-      character.birth_year,
-      character.gender,
-      character.eye_color,
-    ]);
+    const [height, mass, birthYear, gender, eyeColor] =
+      await this.wikiContent.translateValues([
+        character.height,
+        character.mass,
+        character.birth_year,
+        character.gender,
+        character.eye_color,
+      ]);
 
     return {
       nombre: character.name,
@@ -137,22 +170,68 @@ export class PlanetDetailPage implements OnInit {
       imagen: image,
       imagenes: this.wikiContent.getImages("characters", id, image),
       stats: [
-        { icon: this.wikiContent.getStatIcon("height"), label: "Altura", value: `${height} cm` },
-        { icon: this.wikiContent.getStatIcon("mass"), label: "Peso", value: `${mass} kg` },
-        { icon: this.wikiContent.getStatIcon("climate"), label: "Nacimiento", value: birthYear },
-        { icon: this.wikiContent.getStatIcon("gender"), label: "Genero", value: gender },
-        { icon: this.wikiContent.getStatIcon("eyes"), label: "Ojos", value: eyeColor },
+        {
+          icon: this.wikiContent.getStatIcon("height"),
+          label: "Altura",
+          value: `${height} cm`,
+        },
+        {
+          icon: this.wikiContent.getStatIcon("mass"),
+          label: "Peso",
+          value: `${mass} kg`,
+        },
+        {
+          icon: this.wikiContent.getStatIcon("birth"),
+          label: "Nacimiento",
+          value: birthYear,
+        },
+        {
+          icon: this.getGenderIcon(gender), 
+          label: "Genero",  
+          value: gender === "N/a" ? "Robot" : gender },
+        {
+          icon: this.wikiContent.getStatIcon("eyes"),
+          label: "Ojos",
+          value: eyeColor,
+        },
       ],
-      datosCuriosos: await this.wikiContent.getCuriosities("characters", id, character),
+      datosCuriosos: await this.wikiContent.getCuriosities(
+        "characters",
+        id,
+        character,
+      ),
       asociados: [],
     };
+  }
+  //Metodo auxiliar para obtener el icono de genero, con casos especiales para robots y desconocidos.
+  private getGenderIcon(gender: string): string {
+    if (!gender) {
+      return this.wikiContent.getStatIcon("gender");
+    }
+
+    const normalized = gender.toLowerCase();
+    switch (normalized) {
+      case "male":
+      case "hombre":
+        return "assets/icons/male.png";
+      case "female":
+      case "femenino":
+        return "assets/icons/female.png";
+      case "n/a":
+      case "droid":
+        return "assets/icons/robot.png";
+      default:
+        return this.wikiContent.getStatIcon("gender");
+    }
   }
 
   private async buildFilmDetail(film: any): Promise<WikiDetail> {
     const id = this.getIdFromUrl(film.url);
     const episodeId = String(film.episode_id);
     const image = this.wikiContent.getVisualGuideImage("films", episodeId);
-    const description = await this.wikiContent.translateParagraph(film.opening_crawl);
+    const description = await this.wikiContent.translateParagraph(
+      film.opening_crawl,
+    );
 
     return {
       nombre: film.title,
@@ -161,10 +240,26 @@ export class PlanetDetailPage implements OnInit {
       imagen: image,
       imagenes: this.wikiContent.getImages("films", episodeId, image),
       stats: [
-        { icon: this.wikiContent.getStatIcon("orbit"), label: "Episodio", value: String(film.episode_id) },
-        { icon: this.wikiContent.getStatIcon("director"), label: "Director", value: this.wikiContent.valueOrUnknown(film.director) },
-        { icon: this.wikiContent.getStatIcon("producer"), label: "Productor", value: this.wikiContent.valueOrUnknown(film.producer) },
-        { icon: this.wikiContent.getStatIcon("climate"), label: "Estreno", value: this.wikiContent.valueOrUnknown(film.release_date) },
+        {
+          icon: this.wikiContent.getStatIcon("episode"),
+          label: "Episodio",
+          value: String(film.episode_id),
+        },
+        {
+          icon: this.wikiContent.getStatIcon("director"),
+          label: "Director",
+          value: this.wikiContent.valueOrUnknown(film.director),
+        },
+        {
+          icon: this.wikiContent.getStatIcon("producer"),
+          label: "Productor",
+          value: this.wikiContent.valueOrUnknown(film.producer),
+        },
+        {
+          icon: this.wikiContent.getStatIcon("date"),
+          label: "Estreno",
+          value: this.wikiContent.valueOrUnknown(film.release_date),
+        },
       ],
       datosCuriosos: await this.wikiContent.getCuriosities("films", id, film),
       asociados: [],
@@ -172,16 +267,22 @@ export class PlanetDetailPage implements OnInit {
   }
 
   mostrarDescripcion(): boolean {
-    return this.detalle?.categoria !== "Planeta" && Boolean(this.detalle?.descripcion);
+    return (
+      this.detalle?.categoria !== "Planeta" &&
+      Boolean(this.detalle?.descripcion)
+    );
   }
 
   mostrarAsociados(): boolean {
-    return this.detalle?.categoria === "Planeta" && Boolean(this.detalle?.asociados.length);
+    return (
+      this.detalle?.categoria === "Planeta" &&
+      Boolean(this.detalle?.asociados.length)
+    );
   }
 
   private async getAssociated(
     urls: string[] = [],
-    fallbackType: string
+    fallbackType: string,
   ): Promise<WikiAssociated[]> {
     const selectedUrls = urls.filter(Boolean).slice(0, 4);
     const items = await Promise.all(
@@ -192,9 +293,12 @@ export class PlanetDetailPage implements OnInit {
         return {
           tipo: this.getAssociatedType(url, fallbackType),
           nombre: data.name || data.title || "Referencia",
-          imagen: this.wikiContent.getVisualGuideImage(this.getVisualGuideType(url), id),
+          imagen: this.wikiContent.getVisualGuideImage(
+            this.getVisualGuideType(url),
+            id,
+          ),
         };
-      })
+      }),
     );
 
     return items;
@@ -246,7 +350,11 @@ export class PlanetDetailPage implements OnInit {
   }
 
   getResponsiveHeroImage(imagePath: string): string {
-    if (!this.isMobile() || !imagePath.startsWith("assets/") || !imagePath.endsWith(".jpg")) {
+    if (
+      !this.isMobile() ||
+      !imagePath.startsWith("assets/") ||
+      !imagePath.endsWith(".jpg")
+    ) {
       return imagePath;
     }
 
@@ -258,7 +366,9 @@ export class PlanetDetailPage implements OnInit {
       return "";
     }
 
-    return this.isMobile() && this.detalle.mapaMovil ? this.detalle.mapaMovil : this.detalle.mapa;
+    return this.isMobile() && this.detalle.mapaMovil
+      ? this.detalle.mapaMovil
+      : this.detalle.mapa;
   }
 
   volverAtras() {
