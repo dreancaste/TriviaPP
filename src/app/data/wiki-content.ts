@@ -1,20 +1,88 @@
+/**
+ * Tipo que define los tres tipos de entidades del wiki de Star Wars.
+ * @typedef {("characters" | "films" | "planets")} WikiEntityType
+ */
 export type WikiEntityType = "characters" | "films" | "planets";
 
+/**
+ * Interfaz que define la configuración de una sección del wiki.
+ * Cada sección representa una categoría principal (personajes, películas, planetas).
+ * @interface WikiSectionConfig
+ */
 export interface WikiSectionConfig {
+  /**
+   * Tipo de entidad de la sección.
+   * @type {WikiEntityType}
+   */
   type: WikiEntityType;
+
+  /**
+   * Nombre visible de la sección (ej: "Personajes", "Películas").
+   * @type {string}
+   */
   title: string;
+
+  /**
+   * Descripción breve de la sección para el usuario.
+   * @type {string}
+   */
   description: string;
+
+  /**
+   * Ruta de navegación Angular para acceder a la sección.
+   * @type {string}
+   */
   route: string;
+
+  /**
+   * Ruta de la imagen/ícono representativo de la sección.
+   * @type {string}
+   */
   image: string;
 }
 
+/**
+ * Interfaz que define los assets (imágenes y mapas) disponibles para una entidad específica.
+ * Se utiliza para asociar recursos visuales a personajes, películas o planetas.
+ * @interface WikiAssetConfig
+ */
 export interface WikiAssetConfig {
+  /**
+   * URL de la imagen principal (hero image) de la entidad.
+   * @type {string}
+   * @optional
+   */
   image?: string;
+
+  /**
+   * Arreglo de URLs de imágenes adicionales para galería.
+   * @type {string[]}
+   * @optional
+   */
   images?: string[];
+
+  /**
+   * URL del mapa de escritorio para la entidad (principalmente planetas).
+   * @type {string}
+   * @optional
+   */
   map?: string;
+
+  /**
+   * URL del mapa optimizado para dispositivos móviles.
+   * @type {string}
+   * @optional
+   */
   mobileMap?: string;
 }
 
+/**
+ * Configuración de todas las secciones del wiki.
+ * Define las tres categorías principales: Personajes, Películas y Planetas.
+ * Cada sección incluye título, descripción, ruta de navegación e imagen.
+ * @type {WikiSectionConfig[]}
+ * @constant
+ */
 export const WIKI_SECTIONS: WikiSectionConfig[] = [
   {
     type: "characters",
@@ -39,6 +107,23 @@ export const WIKI_SECTIONS: WikiSectionConfig[] = [
   },
 ];
 
+/**
+ * Mapa de assets visuales para todas las entidades del wiki.
+ * 
+ * Estructura: WikiEntityType -> ID de entidad (string) -> WikiAssetConfig
+ * 
+ * Incluye:
+ * - **characters**: URLs de imágenes y datos de 20+ personajes principales de Star Wars.
+ * - **films**: URLs de pósters de las 7 películas principales.
+ * - **planets**: URLs de imágenes, galerías y mapas para 10 planetas principales.
+ * 
+ * Los datos provienen de Star Wars Wiki (wikia.nocookie.net).
+ * Las imágenes son URLs externas y se cargan dinámicamente.
+ * Algunos planetas incluyen mapas customizados en assets locales.
+ * 
+ * @type {Partial<Record<WikiEntityType, Record<string, WikiAssetConfig>>>}
+ * @constant
+ */
 export const WIKI_ASSETS: Partial<Record<WikiEntityType, Record<string, WikiAssetConfig>>> = {
   characters: {
     "1": { image: "https://static.wikia.nocookie.net/starwars/images/3/3d/LukeSkywalker.png/revision/latest/scale-to-width-down/1000?cb=20241221010122" }, // Luke Skywalker
@@ -146,6 +231,24 @@ export const WIKI_ASSETS: Partial<Record<WikiEntityType, Record<string, WikiAsse
   },
 };
 
+/**
+ * Base de datos de curiosidades organizadas por tipo de entidad e ID.
+ * 
+ * Contiene 5-7 datos interesantes por película/planeta.
+ * Cada curiosidad es una oración o párrafo descriptivo relacionado con el universo Star Wars.
+ * 
+ * Estructura: WikiEntityType -> ID de entidad (string) -> string[] (arreglo de curiosidades)
+ * 
+ * Actualmente poblada con curiosidades para:
+ * - **films**: Detalles narrativos de las 6 películas principales (The Phantom Menace hasta Return of the Jedi).
+ * - **planets**: Características y trivia de Tatooine.
+ * - **characters**: (vacío, extendible para personajes).
+ * 
+ * Se carga mediante WikiContentService.getCuriosities() en las páginas de detalle.
+ * 
+ * @type {Partial<Record<WikiEntityType, Record<string, string[]>>>}
+ * @constant
+ */
 export const WIKI_CURIOSITIES: Partial<Record<WikiEntityType, Record<string, string[]>>> = {
   films: {
     "1": [
@@ -202,6 +305,18 @@ export const WIKI_CURIOSITIES: Partial<Record<WikiEntityType, Record<string, str
   },
 };
 
+/**
+ * Mapa de iconos de estadísticas para las fichas de detalle.
+ * 
+ * Asocia nombres de estadísticas con rutas de archivos SVG/PNG.
+ * Se utiliza en las páginas de detalle (planet-detail.page.ts) para mostrar
+ * íconos visuales junto a cada estadística (clima, gravedad, altura, etc).
+ * 
+ * Las rutas apuntan a assets locales almacenados en `assets/icons/`.
+ * 
+ * @type {Object<string, string>}
+ * @constant
+ */
 export const WIKI_STAT_ICONS = {
   climate: "assets/icons/clima.png",
   director: "assets/icons/director.png",

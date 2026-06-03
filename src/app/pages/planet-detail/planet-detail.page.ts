@@ -5,44 +5,190 @@ import { SwapiService } from "src/app/services/swapi.service";
 import { WikiContentService } from "src/app/services/wiki-content.service";
 import { WikiEntityType } from "src/app/data/wiki-content";
 
+/**
+ * Interfaz que define una estadística mostrada en la ficha de detalle.
+ * @interface WikiStat
+ */
 interface WikiStat {
+  /**
+   * URL del ícono de la estadística.
+   * @type {string}
+   */
   icon: string;
+
+  /**
+   * Etiqueta de la estadística (ej: "Clima", "Altura").
+   * @type {string}
+   */
   label: string;
+
+  /**
+   * Valor de la estadística (traducido si es necesario).
+   * @type {string}
+   */
   value: string;
 }
 
+/**
+ * Interfaz para entidades relacionadas (asociados).
+ * @interface WikiAssociated
+ */
 interface WikiAssociated {
+  /**
+   * Tipo de entidad asociada (PERSONAJE, PLANETA, PELICULA).
+   * @type {string}
+   */
   tipo: string;
+
+  /**
+   * Nombre de la entidad asociada.
+   * @type {string}
+   */
   nombre: string;
+
+  /**
+   * Imagen de la entidad asociada.
+   * @type {string}
+   */
   imagen: string;
 }
 
+/**
+ * Interfaz que define la estructura completa de una ficha de detalle en la wiki.
+ * @interface WikiDetail
+ */
 interface WikiDetail {
+  /**
+   * Nombre de la entidad (personaje, película o planeta).
+   * @type {string}
+   */
   nombre: string;
+
+  /**
+   * Categoría de la entidad (Personaje, Película, Planeta).
+   * @type {string}
+   */
   categoria: string;
+
+  /**
+   * Descripción o narrativa de la entidad.
+   * @type {string}
+   */
   descripcion: string;
+
+  /**
+   * Imagen principal (hero image) de la entidad.
+   * @type {string}
+   */
   imagen: string;
+
+  /**
+   * Arreglo de imágenes adicionales de la entidad.
+   * @type {string[]}
+   */
   imagenes: string[];
+
+  /**
+   * Arreglo de estadísticas a mostrar (clima, altura, etc).
+   * @type {WikiStat[]}
+   */
   stats: WikiStat[];
+
+  /**
+   * Arreglo de curiosidades o datos interesantes.
+   * @type {string[]}
+   */
   datosCuriosos: string[];
+
+  /**
+   * Arreglo de entidades asociadas (residentes de un planeta, actores en una película).
+   * @type {WikiAssociated[]}
+   */
   asociados: WikiAssociated[];
+
+  /**
+   * URL del mapa de escritorio (opcional, para planetas).
+   * @type {string}
+   * @optional
+   */
   mapa?: string;
+
+  /**
+   * URL del mapa móvil (opcional, para planetas).
+   * @type {string}
+   * @optional
+   */
   mapaMovil?: string;
 }
 
+
+/**
+ * Página de detalle que muestra información completa de una entidad wiki.
+ * 
+ * Soporta tres tipos de entidades: personajes, películas y planetas.
+ * Muestra estadísticas, curiosidades, imágenes y entidades asociadas.
+ * Responde adaptándose a cambios de tamaño de ventana (responsive).
+ * 
+ * **Servicios consumidos:**
+ * - SwapiService: Para obtener datos detallados de personajes, películas y planetas.
+ * - WikiContentService: Para traducciones, imágenes y curiosidades.
+ * - ActivatedRoute: Para obtener parámetros de ruta (tipo e ID).
+ * - Location: Para navegación hacia atrás.
+ * 
+ * **Acciones disponibles para el usuario:**
+ * - Ver detalles completos de un personaje, película o planeta
+ * - Navegar entre imágenes múltiples
+ * - Ver estadísticas principales
+ * - Leer curiosidades interesantes
+ * - Ver entidades relacionadas (residentes, películas, personajes)
+ * - Cambiar de ubicación seleccionada en asociados
+ * - Retornar a la página anterior
+ * 
+ * @component
+ * @implements {OnInit}
+ */
 @Component({
   selector: "app-planet-detail",
   templateUrl: "./planet-detail.page.html",
   styleUrls: ["./planet-detail.page.scss"],
 })
 export class PlanetDetailPage implements OnInit {
+  /**
+   * Objeto de detalle de la entidad actual (null mientras se carga).
+   * @type {WikiDetail|null}
+   */
   detalle: WikiDetail | null = null;
+
+  /**
+   * Indica si se está cargando el detalle desde la API.
+   * @type {boolean}
+   */
   loading = true;
+
+  /**
+   * Mensaje de error si falla la carga del detalle.
+   * @type {string}
+   */
   error = "";
 
+  /**
+   * Índice del asociado seleccionado actualmente (-1 si ninguno).
+   * Usado para destacar un asociado en la interfaz.
+   * @type {number}
+   */
   selectedAsociado = -1;
 
+  /**
+   * URL de la imagen principal (hero image) responsive.
+   * Se actualiza según el tamaño de pantalla.
+   * @type {string}
+   */
   heroImage = "";
+
+  /**
+   * URL del mapa responsive (escritorio o móvil según ventana).
+   * @type {string}
+   */
   mapaImage = "";
 
   constructor(
@@ -52,15 +198,34 @@ export class PlanetDetailPage implements OnInit {
     private wikiContent: WikiContentService,
   ) {}
 
+  /**
+   * Inicializa la página cargando el detalle de la entidad.
+   * @async
+   * @returns {Promise<void>}
+   */
   async ngOnInit() {
     await this.loadDetail();
   }
 
+  /**
+   * Escucha cambios en el tamaño de la ventana del navegador.
+   * Actualiza los assets responsive cuando cambia el tamaño.
+   * @returns {void}
+   */
   @HostListener("window:resize")
   onResize() {
     this.updateResponsiveAssets();
   }
 
+  /**
+   * Carga el detalle de la entidad según su tipo e ID desde la ruta.
+   * 
+   * Obtiene los parámetros de ruta, consulta la API SWAPI y construye
+   * el objeto de detalle según el tipo (character, film, planet).
+   * @private
+   * @async
+   * @returns {Promise<void>}
+   */
   private async loadDetail() {
     const type = (this.route.snapshot.paramMap.get("type") ||
       "planets") as WikiEntityType;
@@ -90,6 +255,17 @@ export class PlanetDetailPage implements OnInit {
     }
   }
 
+  /**
+   * Construye el objeto de detalle para un planeta.
+   * 
+   * Traduce campos como clima, terreno, población, gravedad y órbita.
+   * Obtiene estadísticas, curiosidades, imágenes y residentes asociados.
+   * @private
+   * @async
+   * @param {any} planet - Datos del planeta desde SWAPI.
+   * @param {string} id - Identificador del planeta.
+   * @returns {Promise<WikiDetail>} Objeto de detalle del planeta formateado.
+   */
   private async buildPlanetDetail(
     planet: any,
     id: string,
@@ -149,6 +325,17 @@ export class PlanetDetailPage implements OnInit {
     };
   }
 
+  /**
+   * Construye el objeto de detalle para un personaje.
+   * 
+   * Traduce campos como altura, peso, año de nacimiento, género y color de ojos.
+   * Obtiene estadísticas, curiosidades e imágenes del personaje.
+   * @private
+   * @async
+   * @param {any} character - Datos del personaje desde SWAPI.
+   * @param {string} id - Identificador del personaje.
+   * @returns {Promise<WikiDetail>} Objeto de detalle del personaje formateado.
+   */
   private async buildCharacterDetail(
     character: any,
     id: string,
@@ -203,7 +390,13 @@ export class PlanetDetailPage implements OnInit {
       asociados: [],
     };
   }
-  //Metodo auxiliar para obtener el icono de genero, con casos especiales para robots y desconocidos.
+
+  /**
+   * Determina el ícono correcto para el género, con casos especiales para robots.
+   * @private
+   * @param {string} gender - Género del personaje (male, female, n/a, droid).
+   * @returns {string} URL del ícono correspondiente.
+   */
   private getGenderIcon(gender: string): string {
     if (!gender) {
       return this.wikiContent.getStatIcon("gender");
@@ -225,6 +418,16 @@ export class PlanetDetailPage implements OnInit {
     }
   }
 
+  /**
+   * Construye el objeto de detalle para una película.
+   * 
+   * Traduce la descripción de apertura (opening crawl).
+   * Obtiene estadísticas (episodio, director, productor, fecha de estreno) e imágenes.
+   * @private
+   * @async
+   * @param {any} film - Datos de la película desde SWAPI.
+   * @returns {Promise<WikiDetail>} Objeto de detalle de la película formateado.
+   */
   private async buildFilmDetail(film: any): Promise<WikiDetail> {
     const id = this.getIdFromUrl(film.url);
     const episodeId = String(film.episode_id);
@@ -266,6 +469,11 @@ export class PlanetDetailPage implements OnInit {
     };
   }
 
+  /**
+   * Determina si debe mostrar la descripción en la interfaz.
+   * La descripción se muestra para películas y personajes, pero no para planetas.
+   * @returns {boolean} true si se debe mostrar la descripción.
+   */
   mostrarDescripcion(): boolean {
     return (
       this.detalle?.categoria !== "Planeta" &&
@@ -273,6 +481,11 @@ export class PlanetDetailPage implements OnInit {
     );
   }
 
+  /**
+   * Determina si debe mostrar la sección de asociados.
+   * Solo se muestra para planetas que tienen residentes (asociados).
+   * @returns {boolean} true si se debe mostrar la sección de asociados.
+   */
   mostrarAsociados(): boolean {
     return (
       this.detalle?.categoria === "Planeta" &&
@@ -280,6 +493,18 @@ export class PlanetDetailPage implements OnInit {
     );
   }
 
+  /**
+   * Obtiene entidades asociadas a partir de sus URLs.
+   * 
+   * Consulta cada URL para obtener datos de la entidad asociada.
+   * Limita el resultado a 4 elementos máximo.
+   * Determina automáticamente el tipo de entidad (personaje, planeta, película).
+   * @private
+   * @async
+   * @param {string[]} urls - Arreglo de URLs de entidades asociadas.
+   * @param {string} fallbackType - Tipo por defecto si no se puede determinar.
+   * @returns {Promise<WikiAssociated[]>} Arreglo de entidades asociadas formateadas.
+   */
   private async getAssociated(
     urls: string[] = [],
     fallbackType: string,
@@ -304,6 +529,13 @@ export class PlanetDetailPage implements OnInit {
     return items;
   }
 
+  /**
+   * Determina el tipo de entidad asociada a partir de su URL.
+   * @private
+   * @param {string} url - URL de la entidad en SWAPI.
+   * @param {string} fallbackType - Tipo por defecto si no se puede determinar.
+   * @returns {string} Tipo de entidad (PERSONAJE, PLANETA, PELICULA).
+   */
   private getAssociatedType(url: string, fallbackType: string): string {
     if (url.includes("/planets/")) {
       return "PLANETA";
@@ -320,6 +552,12 @@ export class PlanetDetailPage implements OnInit {
     return fallbackType;
   }
 
+  /**
+   * Determina el tipo de entidad de wiki a partir de su URL de SWAPI.
+   * @private
+   * @param {string} url - URL de la entidad en SWAPI.
+   * @returns {WikiEntityType} Tipo de entidad para WikiContentService.
+   */
   private getVisualGuideType(url: string): WikiEntityType {
     if (url.includes("/people/")) {
       return "characters";
@@ -332,14 +570,30 @@ export class PlanetDetailPage implements OnInit {
     return "planets";
   }
 
+  /**
+   * Extrae el ID numérico desde una URL de SWAPI.
+   * @private
+   * @param {string} url - URL completa de la entidad.
+   * @returns {string} Identificador numérico o "1" por defecto.
+   */
   private getIdFromUrl(url: string): string {
     return url.split("/").filter(Boolean).pop() || "1";
   }
 
+  /**
+   * Determina si la pantalla es móvil (ancho menor a 768px).
+   * @private
+   * @returns {boolean} true si es móvil, false si es escritorio.
+   */
   private isMobile(): boolean {
     return window.innerWidth < 768;
   }
 
+  /**
+   * Actualiza los assets responsive (imágenes y mapas) según el tamaño de pantalla actual.
+   * @private
+   * @returns {void}
+   */
   private updateResponsiveAssets() {
     if (!this.detalle) {
       return;
@@ -349,6 +603,12 @@ export class PlanetDetailPage implements OnInit {
     this.mapaImage = this.getResponsiveMapaImage();
   }
 
+  /**
+   * Obtiene la versión responsive de la imagen hero según tamaño de pantalla.
+   * Para pantallas móviles, intenta cargar versión optimizada (Movil.jpg).
+   * @param {string} imagePath - Ruta original de la imagen.
+   * @returns {string} Ruta de la imagen responsive.
+   */
   getResponsiveHeroImage(imagePath: string): string {
     if (
       !this.isMobile() ||
@@ -361,6 +621,11 @@ export class PlanetDetailPage implements OnInit {
     return imagePath.replace(".jpg", "Movil.jpg");
   }
 
+  /**
+   * Obtiene la versión responsive del mapa según tamaño de pantalla.
+   * Retorna el mapa móvil si está disponible y la pantalla es móvil.
+   * @returns {string} URL del mapa responsive o cadena vacía si no existe.
+   */
   getResponsiveMapaImage(): string {
     if (!this.detalle?.mapa) {
       return "";
@@ -371,10 +636,19 @@ export class PlanetDetailPage implements OnInit {
       : this.detalle.mapa;
   }
 
+  /**
+   * Navega hacia atrás en el historial del navegador.
+   * @returns {void}
+   */
   volverAtras() {
     this.location.back();
   }
 
+  /**
+   * Selecciona un asociado para destacarlo en la interfaz.
+   * @param {number} index - Índice del asociado a seleccionar.
+   * @returns {void}
+   */
   seleccionarAsociado(index: number) {
     this.selectedAsociado = index;
   }
