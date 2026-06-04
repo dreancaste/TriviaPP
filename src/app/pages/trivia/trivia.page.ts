@@ -5,20 +5,19 @@ import { TriviaService } from "../../services/trivia.service";
 import { StorageService } from "../../services/storage.service";
 import { TriviaQuestion } from "../../models/trivia-question.model";
 import { HistoryItem } from "../../models/history-item.model";
-import { RankingItem } from "../../models/ranking-item.model";
 import { RankingService } from '../../services/ranking.service';
 
 /**
  * Página de juego de trivia donde el usuario responde preguntas de Star Wars.
  * 
  * Gestiona una sesión de 10 preguntas, realiza seguimiento de la puntuación,
- * y persiste los resultados en almacenamiento local y Firebase.
+ * y persiste los resultados en almacenamiento local aislado por usuario.
  * Proporciona retroalimentación inmediata y genera vibración háptica en respuestas incorrectas.
  * 
  * **Servicios consumidos:**
  * - TriviaService: Para generar y gestionar preguntas.
  * - StorageService: Para guardar historial, ranking local y estadísticas.
- * - RankingService: Para publicar puntuaciones en Firebase (ranking diario).
+ * - RankingService: Para guardar puntuaciones en el ranking diario local.
  * - Router: Para navegación.
  * - Haptics: Para retroalimentación háptica (vibración).
  * 
@@ -95,6 +94,7 @@ export class TriviaPage implements OnInit {
    * @type {boolean}
    */
   loading = true;
+  error = "";
 
   /**
    * Indica si se ha completado la sesión de trivia (10 preguntas respondidas).
@@ -129,11 +129,17 @@ export class TriviaPage implements OnInit {
    */
   async loadQuestion() {
     this.loading = true;
+    this.error = "";
     this.answered = false;
     this.selectedAnswer = "";
     this.feedback = "";
-    this.currentQuestion = await this.triviaService.generateQuestion();
-    this.loading = false;
+    try {
+      this.currentQuestion = await this.triviaService.generateQuestion();
+    } catch {
+      this.error = "No pudimos cargar una pregunta. Revisá tu conexión e intentá nuevamente.";
+    } finally {
+      this.loading = false;
+    }
   }
 
   /**
@@ -185,13 +191,13 @@ export class TriviaPage implements OnInit {
   }
 
   /**
-   * Marca el juego como finalizado y guarda los resultados en almacenamiento local y Firebase.
+   * Marca el juego como finalizado y guarda los resultados en almacenamiento local.
    * 
    * Persiste:
    * - Historial de la partida (fecha, puntuación, aciertos)
    * - Elemento del ranking local
    * - Estadísticas generales (juegos, aciertos, puntuación máxima)
-   * - Puntuación en Firebase para ranking diario
+   * - Puntuación en el ranking diario local
    * 
    * Utiliza el nombre de perfil del usuario o "Jugador" por defecto.
    * @async
@@ -211,17 +217,11 @@ export class TriviaPage implements OnInit {
       totalQuestions: this.totalQuestions,
     };
 
-    const rankingItem: RankingItem = {
-      name: displayName,
-      score: this.score,
-    };
-
     // Guardar en localStorage
     this.storageService.addHistory(historyItem);
-    this.storageService.addRankingItem(rankingItem);
     this.storageService.updateStats(this.score, this.correctCount);
 
-    // Guardar en Firebase (ranking diario en línea)
+    // Guardar en el ranking diario local
     await this.rankingService.addScore(
       displayName,
       this.score

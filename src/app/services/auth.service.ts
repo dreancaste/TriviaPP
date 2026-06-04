@@ -23,6 +23,7 @@ export class AuthService {
    * @type {string}
    */
   private currentEmail: string = "";
+  private currentUserId: string = "";
 
   constructor() {}
 
@@ -68,7 +69,7 @@ export class AuthService {
   async login(email: string, password: string) {
     const response = await signIn({ username: email, password });
     if (response.isSignedIn) {
-      this.currentEmail = email; 
+      await this.getCurrentUser();
     }
     return response;
   }
@@ -82,6 +83,7 @@ export class AuthService {
    */
   async logout() {
     this.currentEmail = "";
+    this.currentUserId = "";
     return signOut();
   }
 
@@ -97,10 +99,12 @@ export class AuthService {
   async getCurrentUser(): Promise<any | null> {
     try {
       const user = await getCurrentUser();
-      this.currentEmail = user.signInDetails?.loginId || ""; 
+      this.currentEmail = user.signInDetails?.loginId || "";
+      this.currentUserId = user.userId || user.username || this.currentEmail;
       return user;
     } catch (error) {
       this.currentEmail = "";
+      this.currentUserId = "";
       return null; 
     }
   }
@@ -114,6 +118,10 @@ export class AuthService {
    */
   get userEmail(): string {
     return this.currentEmail;
+  }
+
+  get userStorageScope(): string {
+    return this.currentUserId || this.currentEmail || "anonymous";
   }
 
   /**

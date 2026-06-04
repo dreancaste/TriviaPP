@@ -42,6 +42,7 @@ export class CharactersPage implements OnInit {
    * @type {boolean}
    */
   loading = true;
+  error = '';
 
   constructor(
     private router: Router,
@@ -65,9 +66,20 @@ export class CharactersPage implements OnInit {
    * @returns {Promise<void>}
    */
   async ngOnInit() {
-    const response = await this.swapiService.getPeople(1);
-    this.characters = response.results;
-    this.loading = false;
+    await this.loadCharacters();
+  }
+
+  async loadCharacters() {
+    this.loading = true;
+    this.error = '';
+    try {
+      const response = await this.swapiService.getPeople(1);
+      this.characters = response.results;
+    } catch {
+      this.error = 'No pudimos cargar los personajes.';
+    } finally {
+      this.loading = false;
+    }
   }
 
   /**

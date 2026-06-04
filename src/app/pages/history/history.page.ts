@@ -45,6 +45,14 @@ export class HistoryPage implements OnInit {
    * @returns {void}
    */
   ngOnInit(): void {
+    this.loadHistory();
+  }
+
+  ionViewWillEnter(): void {
+    this.loadHistory();
+  }
+
+  private loadHistory(): void {
     this.history = this.storageService.getHistory();
   }
 

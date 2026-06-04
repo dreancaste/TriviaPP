@@ -43,6 +43,7 @@ export class PlanetsPage implements OnInit {
    * @type {boolean}
    */
   loading = true;
+  error = '';
 
   constructor(
     private router: Router,
@@ -67,22 +68,33 @@ export class PlanetsPage implements OnInit {
    * @returns {Promise<void>}
    */
   async ngOnInit() {
-    const response = await this.swapiService.getPlanets(1);
-    this.planets = await Promise.all(
-      response.results.map(async (planet: any) => {
-        const [climate, terrain] = await this.wikiContent.translateValues([
-          planet.climate,
-          planet.terrain,
-        ]);
+    await this.loadPlanets();
+  }
 
-        return {
-          ...planet,
-          climateEs: climate,
-          terrainEs: terrain,
-        };
-      })
-    );
-    this.loading = false;
+  async loadPlanets() {
+    this.loading = true;
+    this.error = '';
+    try {
+      const response = await this.swapiService.getPlanets(1);
+      this.planets = await Promise.all(
+        response.results.map(async (planet: any) => {
+          const [climate, terrain] = await this.wikiContent.translateValues([
+            planet.climate,
+            planet.terrain,
+          ]);
+
+          return {
+            ...planet,
+            climateEs: climate,
+            terrainEs: terrain,
+          };
+        })
+      );
+    } catch {
+      this.error = 'No pudimos cargar los planetas.';
+    } finally {
+      this.loading = false;
+    }
   }
 
   /**

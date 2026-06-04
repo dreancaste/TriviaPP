@@ -82,6 +82,14 @@ export class ProfilePage implements OnInit {
    * @returns {void}
    */
   ngOnInit(): void {
+    this.loadProfile();
+  }
+
+  ionViewWillEnter(): void {
+    this.loadProfile();
+  }
+
+  private loadProfile(): void {
     this.profile = this.storageService.getProfile();
     this.stats = this.storageService.getStats();
     this.email = this.authService.userEmail;

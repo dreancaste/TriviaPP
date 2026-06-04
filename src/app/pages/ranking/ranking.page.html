@@ -7,12 +7,23 @@
       </ion-card-header>
 
       <ion-card-content>
-        <div class="empty-ranking" *ngIf="ranking.length === 0">
+        <div class="empty-ranking" *ngIf="loading">
+          Cargando ranking...
+        </div>
+
+        <div class="empty-ranking" *ngIf="!loading && error">
+          {{ error }}
+          <ion-button expand="block" fill="outline" (click)="loadRanking()">
+            Reintentar
+          </ion-button>
+        </div>
+
+        <div class="empty-ranking" *ngIf="!loading && !error && ranking.length === 0">
           Todavía no hay puntajes guardados.
           <span>La clasificación está vacía</span>
         </div>
 
-        <div class="ranking-list" *ngIf="ranking.length > 0">
+        <div class="ranking-list" *ngIf="!loading && !error && ranking.length > 0">
           <div
             class="ranking-item"
             *ngFor="let item of ranking; let i = index"

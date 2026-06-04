@@ -2,12 +2,13 @@ import { Injectable } from '@angular/core';
 import { Profile } from '../models/profile.model';
 import { RankingItem } from '../models/ranking-item.model';
 import { HistoryItem } from '../models/history-item.model';
+import { AuthService } from './auth.service';
 
 /**
  * Servicio de almacenamiento local que gestiona la persistencia de datos en localStorage.
  * 
  * Administra perfiles de usuario, historial de partidas, ranking de jugadores y estadísticas.
- * El ranking se reinicia automáticamente cada 24 horas para garantizar competencia equilibrada.
+ * El ranking se reinicia automáticamente al comenzar un nuevo día local.
  * 
  * @injectable
  */
@@ -15,6 +16,8 @@ import { HistoryItem } from '../models/history-item.model';
   providedIn: 'root'
 })
 export class StorageService {
+  constructor(private authService: AuthService) {}
+
   /**
    * Clave para almacenar el perfil del usuario en localStorage.
    * @private
@@ -51,13 +54,17 @@ export class StorageService {
    */
   private RANKING_RESET_KEY = 'sw_ranking_reset_time';
 
+  private scopedKey(key: string): string {
+    return `${key}:${encodeURIComponent(this.authService.userStorageScope)}`;
+  }
+
   /**
    * Guarda el perfil del usuario en localStorage reemplazando cualquier perfil anterior.
    * @param {Profile} profile - Objeto de perfil del usuario a guardar.
    * @returns {void}
    */
   saveProfile(profile: Profile): void {
-    localStorage.setItem(this.PROFILE_KEY, JSON.stringify(profile));
+    localStorage.setItem(this.scopedKey(this.PROFILE_KEY), JSON.stringify(profile));
   }
 
   /**
@@ -68,7 +75,7 @@ export class StorageService {
    * @returns {Profile} Perfil del usuario o perfil por defecto.
    */
   getProfile(): Profile {
-    const data = localStorage.getItem(this.PROFILE_KEY);
+    const data = localStorage.getItem(this.scopedKey(this.PROFILE_KEY));
     return data ? JSON.parse(data) : {
       displayName: '',
       avatar: '',
@@ -82,7 +89,7 @@ export class StorageService {
    * @returns {void}
    */
   saveHistory(history: HistoryItem[]): void {
-    localStorage.setItem(this.HISTORY_KEY, JSON.stringify(history));
+    localStorage.setItem(this.scopedKey(this.HISTORY_KEY), JSON.stringify(history));
   }
 
   /**
@@ -92,7 +99,7 @@ export class StorageService {
    * @returns {HistoryItem[]} Arreglo de registros históricos o arreglo vacío.
    */
   getHistory(): HistoryItem[] {
-    const data = localStorage.getItem(this.HISTORY_KEY);
+    const data = localStorage.getItem(this.scopedKey(this.HISTORY_KEY));
     return data ? JSON.parse(data) : [];
   }
 
@@ -116,11 +123,11 @@ export class StorageService {
    * @returns {void}
    */
   saveRanking(ranking: RankingItem[]): void {
-    localStorage.setItem(this.RANKING_KEY, JSON.stringify(ranking));
+    localStorage.setItem(this.scopedKey(this.RANKING_KEY), JSON.stringify(ranking));
   }
 
   /**
-   * Verifica si ha transcurrido más de 24 horas desde el último reinicio del ranking.
+   * Verifica si comenzó un nuevo día local desde el último reinicio del ranking.
    * 
    * Si no hay marca de tiempo de reinicio anterior, la establece.
    * Si han pasado más de 24 horas, elimina el ranking y actualiza la marca de tiempo.
@@ -128,25 +135,32 @@ export class StorageService {
    * @returns {void}
    */
   private checkAndResetRanking(): void {
-    const lastReset = localStorage.getItem(this.RANKING_RESET_KEY);
-    const now = Date.now();
-    const twentyFourHours = 24 * 60 * 60 * 1000;
+    const resetKey = this.scopedKey(this.RANKING_RESET_KEY);
+    const rankingKey = this.scopedKey(this.RANKING_KEY);
+    const lastReset = localStorage.getItem(resetKey);
+    const today = this.getLocalDateKey();
 
     if (!lastReset) {
-      localStorage.setItem(this.RANKING_RESET_KEY, now.toString());
+      localStorage.setItem(resetKey, today);
       return;
     }
 
-    const lastResetTime = Number(lastReset);
-
-    if (now - lastResetTime >= twentyFourHours) {
-      localStorage.removeItem(this.RANKING_KEY);
-      localStorage.setItem(this.RANKING_RESET_KEY, now.toString());
+    if (lastReset !== today) {
+      localStorage.removeItem(rankingKey);
+      localStorage.setItem(resetKey, today);
     }
   }
 
+  private getLocalDateKey(): string {
+    const now = new Date();
+    const year = now.getFullYear();
+    const month = String(now.getMonth() + 1).padStart(2, '0');
+    const day = String(now.getDate()).padStart(2, '0');
+    return `${year}-${month}-${day}`;
+  }
+
   /**
-   * Recupera el ranking actual desde localStorage con reinicio automático cada 24 horas.
+   * Recupera el ranking actual desde localStorage con reinicio diario local.
    * 
    * Verifica si debe reiniciarse antes de retornar el ranking.
    * Retorna el ranking guardado o un arreglo vacío si no existe.
@@ -154,7 +168,7 @@ export class StorageService {
    */
   getRanking(): RankingItem[] {
     this.checkAndResetRanking();
-    const data = localStorage.getItem(this.RANKING_KEY);
+    const data = localStorage.getItem(this.scopedKey(this.RANKING_KEY));
     return data ? JSON.parse(data) : [];
   }
 
@@ -185,7 +199,7 @@ export class StorageService {
     }
 
     ranking.sort((a: RankingItem, b: RankingItem) => b.score - a.score);
-    localStorage.setItem(this.RANKING_KEY, JSON.stringify(ranking.slice(0, 20)));
+    localStorage.setItem(this.scopedKey(this.RANKING_KEY), JSON.stringify(ranking.slice(0, 20)));
   }
 
   /**
@@ -195,7 +209,7 @@ export class StorageService {
    * @returns {void}
    */
   clearRanking(): void {
-    localStorage.removeItem(this.RANKING_KEY);
+    localStorage.removeItem(this.scopedKey(this.RANKING_KEY));
   }
 
   /**
@@ -206,7 +220,7 @@ export class StorageService {
    * @returns {void}
    */
   saveStats(stats: any): void {
-    localStorage.setItem(this.STATS_KEY, JSON.stringify(stats));
+    localStorage.setItem(this.scopedKey(this.STATS_KEY), JSON.stringify(stats));
   }
 
   /**
@@ -216,7 +230,7 @@ export class StorageService {
    * @returns {any} Objeto de estadísticas con propiedades gamesPlayed, correctAnswers y maxScore.
    */
   getStats(): any {
-    const data = localStorage.getItem(this.STATS_KEY);
+    const data = localStorage.getItem(this.scopedKey(this.STATS_KEY));
     return data ? JSON.parse(data) : {
       gamesPlayed: 0,
       correctAnswers: 0,

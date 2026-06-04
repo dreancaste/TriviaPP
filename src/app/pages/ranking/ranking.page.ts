@@ -1,17 +1,16 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 
 import { RankingService } from '../../services/ranking.service';
 
 /**
- * Página de ranking que muestra las puntuaciones más altas del día actual en Firebase.
+ * Página de ranking que muestra las puntuaciones más altas del día actual.
  * 
- * Carga y muestra el ranking diario de todos los jugadores, ordenado de mayor a menor puntuación.
- * El ranking se reinicia cada 24 horas automáticamente.
- * Los datos se obtienen en tiempo real desde Firebase Firestore.
+ * Carga el ranking diario local del usuario autenticado, ordenado de mayor a menor puntuación.
+ * El ranking se reinicia al comenzar un nuevo día según la hora local.
  * 
  * **Servicios consumidos:**
- * - RankingService: Para recuperar el ranking diario desde Firebase Firestore.
+ * - RankingService: Para recuperar el ranking diario local.
  * - Router: Para navegación.
  * 
  * **Acciones disponibles para el usuario:**
@@ -20,14 +19,13 @@ import { RankingService } from '../../services/ranking.service';
  * - Retornar a la página de inicio
  * 
  * @component
- * @implements {OnInit}
  */
 @Component({
   selector: 'app-ranking',
   templateUrl: './ranking.page.html',
   styleUrls: ['./ranking.page.scss']
 })
-export class RankingPage implements OnInit {
+export class RankingPage {
 
   /**
    * Arreglo de elementos del ranking diario.
@@ -36,6 +34,8 @@ export class RankingPage implements OnInit {
    * @type {any[]}
    */
   ranking: any[] = [];
+  loading = true;
+  error = '';
 
   constructor(
     private rankingService: RankingService,
@@ -43,15 +43,27 @@ export class RankingPage implements OnInit {
   ) {}
 
   /**
-   * Inicializa la página cargando el ranking diario desde Firebase.
+   * Inicializa la página cargando el ranking diario local.
    * 
    * Se ejecuta automáticamente al cargar la página y recupera los puntajes
    * registrados en el día actual.
    * @async
    * @returns {Promise<void>}
    */
-  async ngOnInit() {
-    this.ranking = await this.rankingService.getDailyRanking();
+  async ionViewWillEnter() {
+    await this.loadRanking();
+  }
+
+  async loadRanking() {
+    this.loading = true;
+    this.error = '';
+    try {
+      this.ranking = await this.rankingService.getDailyRanking();
+    } catch {
+      this.error = 'No pudimos cargar el ranking diario.';
+    } finally {
+      this.loading = false;
+    }
   }
 
   /**

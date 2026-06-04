@@ -42,6 +42,7 @@ export class FilmsPage implements OnInit {
    * @type {boolean}
    */
   loading = true;
+  error = '';
 
   constructor(
     private router: Router,
@@ -65,9 +66,20 @@ export class FilmsPage implements OnInit {
    * @returns {Promise<void>}
    */
   async ngOnInit() {
-    const response = await this.swapiService.getFilms();
-    this.films = response.results;
-    this.loading = false;
+    await this.loadFilms();
+  }
+
+  async loadFilms() {
+    this.loading = true;
+    this.error = '';
+    try {
+      const response = await this.swapiService.getFilms();
+      this.films = response.results;
+    } catch {
+      this.error = 'No pudimos cargar las películas.';
+    } finally {
+      this.loading = false;
+    }
   }
 
   /**

@@ -6,7 +6,7 @@
         <ion-card-subtitle>Misión en una galaxia muy lejana</ion-card-subtitle>
       </ion-card-header>
 
-      <ion-card-content *ngIf="!loading">
+      <ion-card-content *ngIf="!loading && !error">
         <div class="progress-text">
           Pregunta {{ questionNumber }} de {{ totalQuestions }}
         </div>
@@ -70,6 +70,16 @@
 
       <ion-card-content *ngIf="loading">
         <div class="loading-state">Cargando pregunta...</div>
+      </ion-card-content>
+
+      <ion-card-content *ngIf="!loading && error">
+        <div class="loading-state">{{ error }}</div>
+        <ion-button expand="block" class="next-btn" (click)="loadQuestion()">
+          Reintentar
+        </ion-button>
+        <ion-button expand="block" fill="outline" class="back-btn" (click)="goHome()">
+          Volver
+        </ion-button>
       </ion-card-content>
     </ion-card>
 

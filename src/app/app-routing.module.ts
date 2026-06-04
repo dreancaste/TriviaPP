@@ -48,6 +48,7 @@ const routes: Routes = [
   },
   {
     path: "wiki",
+    canActivate: [AuthGuard],
     loadChildren: () =>
       import("./pages/wiki/wiki.module").then((m) => m.WikiPageModule),
   },
