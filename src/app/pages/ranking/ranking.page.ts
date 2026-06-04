@@ -6,11 +6,11 @@ import { RankingService } from '../../services/ranking.service';
 /**
  * Página de ranking que muestra las puntuaciones más altas del día actual.
  * 
- * Carga el ranking diario local del usuario autenticado, ordenado de mayor a menor puntuación.
- * El ranking se reinicia al comenzar un nuevo día según la hora local.
+ * Carga el ranking diario global desde Firebase, ordenado de mayor a menor puntuación.
+ * El ranking cambia al comenzar un nuevo día en Argentina.
  * 
  * **Servicios consumidos:**
- * - RankingService: Para recuperar el ranking diario local.
+ * - RankingService: Para recuperar el ranking diario global desde Firebase.
  * - Router: Para navegación.
  * 
  * **Acciones disponibles para el usuario:**
@@ -43,7 +43,7 @@ export class RankingPage {
   ) {}
 
   /**
-   * Inicializa la página cargando el ranking diario local.
+   * Inicializa la página cargando el ranking diario global.
    * 
    * Se ejecuta automáticamente al cargar la página y recupera los puntajes
    * registrados en el día actual.

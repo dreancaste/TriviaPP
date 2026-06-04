@@ -16,8 +16,8 @@ import { RankingService } from '../../services/ranking.service';
  * 
  * **Servicios consumidos:**
  * - TriviaService: Para generar y gestionar preguntas.
- * - StorageService: Para guardar historial, ranking local y estadísticas.
- * - RankingService: Para guardar puntuaciones en el ranking diario local.
+ * - StorageService: Para guardar historial y estadísticas.
+ * - RankingService: Para publicar puntuaciones en el ranking diario global.
  * - Router: Para navegación.
  * - Haptics: Para retroalimentación háptica (vibración).
  * 
@@ -101,6 +101,7 @@ export class TriviaPage implements OnInit {
    * @type {boolean}
    */
   gameFinished = false;
+  rankingError = "";
 
   constructor(
     private triviaService: TriviaService,
@@ -182,7 +183,7 @@ export class TriviaPage implements OnInit {
    */
   async nextQuestion() {
     if (this.questionNumber >= this.totalQuestions) {
-      this.finishGame();
+      await this.finishGame();
       return;
     }
 
@@ -195,9 +196,8 @@ export class TriviaPage implements OnInit {
    * 
    * Persiste:
    * - Historial de la partida (fecha, puntuación, aciertos)
-   * - Elemento del ranking local
    * - Estadísticas generales (juegos, aciertos, puntuación máxima)
-   * - Puntuación en el ranking diario local
+   * - Puntuación en el ranking diario global de Firebase
    * 
    * Utiliza el nombre de perfil del usuario o "Jugador" por defecto.
    * @async
@@ -221,11 +221,22 @@ export class TriviaPage implements OnInit {
     this.storageService.addHistory(historyItem);
     this.storageService.updateStats(this.score, this.correctCount);
 
-    // Guardar en el ranking diario local
-    await this.rankingService.addScore(
-      displayName,
-      this.score
-    );
+    // Guardar en el ranking diario global
+    await this.publishScore(displayName);
+  }
+
+  async retryRankingUpload() {
+    const profile = this.storageService.getProfile();
+    await this.publishScore(profile.displayName || "Jugador");
+  }
+
+  private async publishScore(displayName: string) {
+    this.rankingError = "";
+    try {
+      await this.rankingService.addScore(displayName, this.score);
+    } catch {
+      this.rankingError = "La partida se guardó, pero no pudimos publicar el puntaje global.";
+    }
   }
 
   /**
@@ -249,6 +260,7 @@ export class TriviaPage implements OnInit {
     this.questionNumber = 1;
     this.correctCount = 0;
     this.gameFinished = false;
+    this.rankingError = "";
     this.triviaService.resetUsedQuestions();
     await this.loadQuestion();
   }

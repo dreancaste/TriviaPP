@@ -104,6 +104,13 @@
           </div>
         </div>
 
+        <div class="feedback wrong" *ngIf="rankingError">
+          {{ rankingError }}
+          <ion-button expand="block" fill="outline" (click)="retryRankingUpload()">
+            Reintentar publicación
+          </ion-button>
+        </div>
+
         <ion-button expand="block" class="next-btn" (click)="playAgain()">
           Jugar otra vez
         </ion-button>
