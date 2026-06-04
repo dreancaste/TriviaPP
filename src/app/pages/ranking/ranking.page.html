@@ -40,7 +40,9 @@
 
               <div class="rank-info">
                 <p class="rank-name">{{ item.name || 'Jugador galáctico' }}</p>
-                <p class="rank-detail">Posición en la clasificación</p>
+                <p class="rank-detail">
+                  Mejor puntaje a las {{ formatBestScoreTime(item.updatedAt) }}
+                </p>
               </div>
             </div>
 

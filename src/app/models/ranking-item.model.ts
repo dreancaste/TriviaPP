@@ -27,4 +27,14 @@ export interface RankingItem {
    * @optional
    */
   date?: string;
+
+  /**
+   * Identificador estable de la cuenta que obtuvo el puntaje.
+   */
+  accountId?: string;
+
+  /**
+   * Fecha y hora en la que la cuenta alcanzó su mejor puntaje diario.
+   */
+  updatedAt?: any;
 }

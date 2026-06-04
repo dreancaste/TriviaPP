@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 
 import { RankingService } from '../../services/ranking.service';
+import { RankingItem } from '../../models/ranking-item.model';
 
 /**
  * Página de ranking que muestra las puntuaciones más altas del día actual.
@@ -33,7 +34,7 @@ export class RankingPage {
    * Los elementos están ordenados descendentemente por puntuación (mayor a menor).
    * @type {any[]}
    */
-  ranking: any[] = [];
+  ranking: RankingItem[] = [];
   loading = true;
   error = '';
 
@@ -64,6 +65,26 @@ export class RankingPage {
     } finally {
       this.loading = false;
     }
+  }
+
+  formatBestScoreTime(updatedAt: any): string {
+    if (!updatedAt) {
+      return 'Hora no disponible';
+    }
+
+    const date = typeof updatedAt.toDate === 'function'
+      ? updatedAt.toDate()
+      : new Date(updatedAt);
+
+    if (Number.isNaN(date.getTime())) {
+      return 'Hora no disponible';
+    }
+
+    return new Intl.DateTimeFormat('es-AR', {
+      timeZone: 'America/Argentina/Buenos_Aires',
+      hour: '2-digit',
+      minute: '2-digit'
+    }).format(date);
   }
 
   /**
